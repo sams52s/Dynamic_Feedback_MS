@@ -1,4 +1,4 @@
-package sams.feedbloom.authentication.util;
+package sams.feedbloom.authentication.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
