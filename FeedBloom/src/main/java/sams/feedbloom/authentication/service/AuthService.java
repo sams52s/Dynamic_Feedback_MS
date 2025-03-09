@@ -31,17 +31,16 @@ public class AuthService {
 	
 	@Transactional
 	public AuthResponse registerUser(RegisterRequest request) {
-		userRepository.findByEmail(request.getEmail()).ifPresent(user -> {
+		if (userRepository.findByEmail(request.getEmail()).isPresent()) {
 			log.warn("User registration failed: Email {} already exists", request.getEmail());
 			throw new EmailAlreadyExistsException("Email already exists");
-		});
+		}
 		
 		User newUser = UserMapper.mapToEntity(request);
 		newUser.setPassword(passwordEncoder.encode(request.getPassword()));
-		
 		User savedUser = userRepository.save(newUser);
-		log.info("New user registered successfully: {}", savedUser.getEmail());
 		
+		log.info("New user registered successfully: {}", savedUser.getEmail());
 		return generateAuthResponse(savedUser);
 	}
 	
@@ -51,10 +50,7 @@ public class AuthService {
 		                                  );
 		
 		User user = userRepository.findByEmail(request.getEmail())
-		                          .orElseThrow(() -> {
-			                          log.warn("Login failed: Invalid email or password for {}", request.getEmail());
-			                          return new UserNotFoundException("Invalid email or password");
-		                          });
+		                          .orElseThrow(() -> new UserNotFoundException("Invalid email or password"));
 		
 		log.info("User logged in successfully: {}", user.getEmail());
 		return generateAuthResponse(user);
@@ -62,25 +58,18 @@ public class AuthService {
 	
 	public UserDTO findUserByEmail(String email) {
 		return userRepository.findByEmail(email)
-		                     .map(user -> {
-			                     log.info("User found: {}", user.getEmail());
-			                     return UserMapper.mapToDto(user);
-		                     })
-		                     .orElseThrow(() -> {
-			                     log.warn("User not found: {}", email);
-			                     return new UserNotFoundException("User not found");
-		                     });
+		                     .map(UserMapper::mapToDto)
+		                     .orElseThrow(() -> new UserNotFoundException("User not found"));
 	}
 	
 	private AuthResponse generateAuthResponse(User user) {
-		// Convert User entity to UserDetails
 		UserDetails userDetails = org.springframework.security.core.userdetails.User
 				                          .withUsername(user.getEmail())
 				                          .password(user.getPassword())
 				                          .roles(user.getRole().name())
 				                          .build();
 		
-		String jwtToken = jwtUtil.generateToken(userDetails); // Pass UserDetails to generateToken
+		String jwtToken = jwtUtil.generateToken(userDetails);
 		return new AuthResponse(UserMapper.mapToDto(user), jwtToken);
 	}
 }

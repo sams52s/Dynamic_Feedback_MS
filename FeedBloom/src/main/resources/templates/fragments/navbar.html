@@ -1,0 +1,52 @@
+<nav class="navbar navbar-dark bg-dark fixed-top" id="topNavbar"
+     th:fragment="topNavbar">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">Home</a>
+        <button aria-controls="offcanvasDarkNavbar" aria-label="Toggle navigation" class="navbar-toggler"
+                data-bs-target="#offcanvasDarkNavbar"
+                data-bs-toggle="offcanvas" type="button">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div aria-labelledby="offcanvasDarkNavbarLabel" class="offcanvas offcanvas-end text-bg-dark"
+             id="offcanvasDarkNavbar"
+             tabindex="-1">
+            <div class="offcanvas-header">
+                <h5 class="offcanvas-title" id="offcanvasDarkNavbarLabel">Profile</h5>
+                <button aria-label="Close" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"
+                        type="button"></button>
+            </div>
+            <div class="offcanvas-body">
+                <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+                    <li class="nav-item">
+                        <div class="row p-2">
+                            <a class="nav-link active col-lg-10" href="#" th:text="${user.name}"></a>
+                            <a class="nav-link active col-lg-2" href="#">Edit</a>
+                        </div>
+
+                    </li>
+                    <li class="nav-item">
+                        <span th:text="${user.role}"></span>
+                    </li>
+                    <li class="nav-item">
+                        <span th:text="${user.email}"></span>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a aria-expanded="false" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#"
+                           role="button">
+                            Dropdown
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-dark">
+                            <li><a class="dropdown-item" href="#">Action</a></li>
+                            <li><a class="dropdown-item" href="#">Another action</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="#">Something else here</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                <a class="btn btn-danger" th:href="@{/logout}">Log out</a>
+            </div>
+        </div>
+    </div>
+</nav>
