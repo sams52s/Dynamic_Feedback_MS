@@ -1,4 +1,7 @@
 package sams.feedbloom.authentication.exception;
 
-public class UserNotFoundException {
+public final class UserNotFoundException extends BaseCustomAuthException {
+	public UserNotFoundException(String message) {
+		super(message);
+	}
 }

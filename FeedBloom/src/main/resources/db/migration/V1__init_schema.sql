@@ -1,42 +1,46 @@
-CREATE TABLE users (
-                       id SERIAL PRIMARY KEY,
-                       role VARCHAR(100) DEFAULT 'USER' NOT NULL,
-                       name VARCHAR(100) NOT NULL,
-                       user_name VARCHAR(100) NOT NULL,
-                       email VARCHAR(255) UNIQUE NOT NULL,
-                       password VARCHAR(255) NOT NULL,
-                       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                       updated_at TIMESTAMP DEFAULT NULL,
-                       is_deleted BOOLEAN DEFAULT FALSE,
-                       deleted_at TIMESTAMP DEFAULT NULL,
-                       deleted_by VARCHAR(100) DEFAULT NULL
-
+-- Create users table
+CREATE TABLE users
+(
+    id         SERIAL PRIMARY KEY,
+    name       VARCHAR(100)        NOT NULL,
+    email      VARCHAR(255) UNIQUE NOT NULL,
+    password   VARCHAR(255)        NOT NULL,
+    role       VARCHAR(50)         NOT NULL DEFAULT 'USER',
+    created_at TIMESTAMP                    DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP                    DEFAULT NULL,
+    is_deleted BOOLEAN                      DEFAULT FALSE,
+    deleted_at TIMESTAMP                    DEFAULT NULL,
+    deleted_by VARCHAR(100)                 DEFAULT NULL
 );
 
-CREATE INDEX idx_users_email ON users(email);
+-- Create index on email for faster lookups
+CREATE INDEX idx_users_email ON users (email);
 
-INSERT INTO users (name, user_name, email, password, role)
-VALUES
-    ('Super', 'DSi', 'dsi@dsinnovators.com',
-     '123',
-     'SUPER_ADMIN');
+-- Insert a default super admin user
+INSERT INTO users (name, email, password, role)
+VALUES ('Super Admin',
+        'dsi@dsinnovators.com',
+        '$2a$10$ExampleHashedPassword',
+        'SUPER_ADMIN');
 
-
-CREATE TABLE audit_log (
-                           id SERIAL PRIMARY KEY,
-                           table_name VARCHAR(255) NOT NULL, -- Name of the affected table
-                           record_id INT NOT NULL, -- ID of the affected record
-                           action VARCHAR(50) NOT NULL CHECK (action IN ('CREATE', 'UPDATE', 'DELETE')),
-                           action_by INT NOT NULL, -- User ID who performed the action
-                           action_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+-- Create audit_log table
+CREATE TABLE audit_log
+(
+    id         SERIAL PRIMARY KEY,
+    table_name VARCHAR(255) NOT NULL,
+    record_id  INT          NOT NULL,
+    action     VARCHAR(50)  NOT NULL CHECK (action IN ('CREATE', 'UPDATE', 'DELETE')),
+    action_by  INT          NOT NULL,
+    action_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Indexes for optimized query performance
-CREATE INDEX idx_audit_table ON audit_log(table_name);
-CREATE INDEX idx_audit_action_by ON audit_log(action_by);
+CREATE INDEX idx_audit_table ON audit_log (table_name);
+CREATE INDEX idx_audit_action_by ON audit_log (action_by);
 
 -- Create audit log function
-CREATE OR REPLACE FUNCTION log_user_changes() RETURNS TRIGGER AS $$
+CREATE OR REPLACE FUNCTION log_user_changes() RETURNS TRIGGER AS
+$$
 BEGIN
     IF (TG_OP = 'INSERT') THEN
         INSERT INTO audit_log (table_name, record_id, action, action_by)
@@ -56,5 +60,7 @@ $$ LANGUAGE plpgsql;
 
 -- Attach trigger to users table for automatic auditing
 CREATE TRIGGER users_audit_trigger
-    AFTER INSERT OR UPDATE OR DELETE ON users
-    FOR EACH ROW EXECUTE FUNCTION log_user_changes();
+    AFTER INSERT OR UPDATE OR DELETE
+    ON users
+    FOR EACH ROW
+EXECUTE FUNCTION log_user_changes();
