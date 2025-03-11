@@ -16,7 +16,7 @@ This project is a Feedback Management System designed to streamline the process 
   - A verification email is sent to the user.
   - The user activates their account by clicking the verification link.
 - **Role Assignment:**
-  - The Admin assigns roles: User, Approver, or Admin.
+  - The Admin assigns roles: User, Approver(Manager and Leads), and Admin.
   - The user is notified of their role via email.
 
 #### 1.2 User Login
