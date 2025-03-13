@@ -1,4 +1,3 @@
--- Create users table
 CREATE TABLE users
 (
     id         SERIAL PRIMARY KEY,
@@ -13,17 +12,14 @@ CREATE TABLE users
     deleted_by VARCHAR(100)                 DEFAULT NULL
 );
 
--- Create index on email for faster lookups
 CREATE INDEX idx_users_email ON users (email);
 
--- Insert a default super admin user
 INSERT INTO users (name, email, password, role)
 VALUES ('Super Admin',
         'dsi@dsinnovators.com',
         '$2a$10$ExampleHashedPassword',
         'SUPER_ADMIN');
 
--- Create audit_log table
 CREATE TABLE audit_log
 (
     id         SERIAL PRIMARY KEY,
@@ -34,11 +30,9 @@ CREATE TABLE audit_log
     action_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Indexes for optimized query performance
 CREATE INDEX idx_audit_table ON audit_log (table_name);
 CREATE INDEX idx_audit_action_by ON audit_log (action_by);
 
--- Create audit log function
 CREATE OR REPLACE FUNCTION log_user_changes() RETURNS TRIGGER AS
 $$
 BEGIN
@@ -58,7 +52,6 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
--- Attach trigger to users table for automatic auditing
 CREATE TRIGGER users_audit_trigger
     AFTER INSERT OR UPDATE OR DELETE
     ON users
