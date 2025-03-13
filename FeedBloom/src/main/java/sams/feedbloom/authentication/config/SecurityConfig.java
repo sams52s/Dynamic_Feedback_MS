@@ -20,6 +20,16 @@ import sams.feedbloom.authentication.service.CustomUserDetailsService;
 @RequiredArgsConstructor
 public class SecurityConfig {
 	
+	private static final String[] PUBLIC_ENDPOINTS = {
+			"/", "/register", "/login", "/api/login", "/dashboard",
+			"/error",
+			"/home",
+			"/query/**",
+			"/email/**",
+			"/css/**",
+			"/js/**",
+			"/images/**"
+	};
 	private final CustomUserDetailsService customUserDetailsService;
 	private final JwtAuthenticationFilter jwtAuthenticationFilter;
 	
@@ -28,7 +38,7 @@ public class SecurityConfig {
 		http
 				.csrf(csrf -> csrf.disable())
 				.authorizeHttpRequests(auth -> auth
-						                               .requestMatchers("/", "/register", "/login", "/api/login", "/dashboard").permitAll()
+						                               .requestMatchers(PUBLIC_ENDPOINTS).permitAll()
 						                               .anyRequest().authenticated()
 				                      )
 				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
