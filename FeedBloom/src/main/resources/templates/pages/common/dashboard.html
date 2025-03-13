@@ -3,32 +3,123 @@
 <head>
     <meta charset="UTF-8">
     <title>FeedBloom</title>
-    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" th:href="@{/css/styles.css}" type="text/css"/>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
 <div class="container-fluid">
-    <!-- Navbar -->
-    <div class="row">
-        <div class="col-lg-12" th:replace="fragments/navbar :: topNavbar"></div>
+    <!--    <div class="row">-->
+    <!--    </div>-->
+    <div class="row bg-black">
+        <div class="col">
+            <h1 class="text-white">Feedbloom</h1>
+        </div>
     </div>
 
-    <!-- Main Content -->
     <div class="row mt-5 pt-4">
-        <div class="col-lg-1"></div>
-        <div class="col-lg-11">
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="text-center">Feed</h3>
+        <div class="col-1">
+            <div class="row">
+                <div class="col">
+                    <a th:href="@{/feed/home}">
+                        <img alt="HOME" class="img-fluid"
+                             th:src="@{/images/home.gif}">
+                    </a>
                 </div>
-                <div class="card-body">
-                    <p>Welcome, <span th:text="${user.name} ?: 'Guest'"></span>!</p>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <a th:href="@{/feed/home}">
+                        <img alt="PROFILE" class="img-fluid" th:src="@{/images/profile.gif}">
+                    </a>
+                </div>
+            </div>
+            <div class="card">
+                <div class="row">
+                    <a th:href="@{/feed/home}">
+                        <h5 class="col text-start card-title">
+                            <a class="nav-link active" href="#" th:text="${user.name}"></a>
+                        </h5>
+                    </a>
+                </div>
+                <div class="row">
+                    <span class="card-text" th:text="${user.email}"></span>
+                </div>
+                <div class="row">
+                    <span class="card-text" th:text="${user.role}"></span>
+                </div>
+                <div class="row">
+                    <a class="btn btn-success align-content-center" th:href="@{/user/edit}">Edit</a>
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="col">
+                    <a th:href="@{/feed/home}">
+                        <img alt="USERS" class="img-fluid" th:src="@{/images/user.gif}">
+                    </a>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <a th:href="@{/feed/home}">
+                        <img alt="USERS" class="img-fluid" th:src="@{/images/logout.gif}">
+                    </a>
                 </div>
             </div>
         </div>
+        <div class="col-1"></div>
+        <div class="col-8">
+            <div class="row">
+                <div class="col-10 text-start card">
+                    <h3 class="text-start card-title">Feed</h3>
+                </div>
+                <div class="col-2 addBtn text-end">
+                    <a class="btn btn-success text-nowrap" id="createFeedback"
+                       th:href="@{/feedback/add}">+
+                        Create Feedback</a>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <form method="post" th:action="@{/feedback/add}">
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">Title</span>
+                            <input aria-label="Title" class="form-control" id="title" placeholder="title" required
+                                   type="text">
+                        </div>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">Category</span>
+                            <input aria-label="Category" class="form-control" id="category" placeholder="category"
+                                   required
+                                   type="text">
+                        </div>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">Priority</span>
+                            <input aria-label="Priority" class="form-control" id="priority" placeholder="priority"
+                                   required
+                                   type="text">
+                        </div>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">Description</span>
+                            <input aria-label="Description" class="form-control" id="description"
+                                   placeholder="description"
+                                   required
+                                   type="text">
+                        </div>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">Attachment</span>
+                            <input aria-label="Attachment" class="form-control" id="attachment" placeholder="attachment"
+                                   required
+                                   type="text">
+                        </div>
+                        <button class="btn login-button mt-4 btn-outline-primary" type="submit">Add Feedback</button>
+                    </form>
+                </div>
+            </div>
+            <!--            <div th:replace="fragments/addFeedbackModal :: addFeedbackModal"></div>-->
+        </div>
     </div>
 </div>
-
 <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
