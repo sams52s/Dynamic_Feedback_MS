@@ -47,7 +47,8 @@ public class AuthController {
 	public String loginUser(@Valid @ModelAttribute LoginRequest request, Model model) {
 		AuthResponse response = authService.loginUser(request);
 		model.addAttribute("user", authService.findUserByEmail(response.getUser().getEmail()));
-		return "pages/common/dashboard";
+//		return "pages/common/dashboard";
+		return "redirect:/feedbacks/dashboard/" + response.getUser().getEmail();
 	}
 
 //	@PostMapping("/api/login")

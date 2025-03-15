@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import sams.feedbloom.authentication.entity.User;
+import sams.feedbloom.authentication.service.AuthService;
 import sams.feedbloom.feedback.dto.FeedbackResponse;
 import sams.feedbloom.feedback.service.FeedbackService;
 
@@ -16,10 +16,11 @@ import java.util.List;
 public class FeedbackController {
 	
 	private final FeedbackService feedbackService;
+	private final AuthService authService;
 	
-	@GetMapping("/dashboard")
-	public String showDashboard(@ModelAttribute("user") User user, Model model) {
-		model.addAttribute("user", user);
+	@GetMapping("/dashboard/{email}")
+	public String showDashboard(@PathVariable String email, Model model) {
+		model.addAttribute("user", authService.findUserByEmail(email));
 		return "pages/common/dashboard";
 	}
 	
