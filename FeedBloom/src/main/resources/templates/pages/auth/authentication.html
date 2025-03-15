@@ -36,23 +36,25 @@
 
                         <h3 class="card-text mt-3 text-uppercase fw-bold text-dark" th:text="${authMode}"></h3>
 
-                        <form method="post" th:action="@{${authMode == 'Login'} ? '/login' : '/register'}">
-                            <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden">
-
+                        <form method="post" th:action="${authMode == 'Login'} ? @{/login} : @{/register}"
+                              th:object="${request}">
                             <div class="input-group mb-3" th:if="${authMode == 'Register'}">
                                 <span class="input-group-text">Name</span>
-                                <input class="form-control" name="name" placeholder="Name" required th:field="*{name}"
-                                       type="text">
+                                <input aria-label="Name" class="form-control" id="name" placeholder="Name" required
+                                       th:field="*{name}" type="text">
                             </div>
                             <div class="input-group mb-3">
                                 <span class="input-group-text">Email</span>
-                                <input class="form-control" name="email" placeholder="Email" required
-                                       th:field="*{email}" type="email">
+                                <input aria-label="Email" class="form-control" id="email" placeholder="Email" required
+                                       th:field="*{email}"
+                                       type="email">
                             </div>
                             <div class="input-group mb-3">
                                 <span class="input-group-text">Password</span>
-                                <input class="form-control" name="password" placeholder="Password"
-                                       required th:field="*{password}" type="password">
+                                <input aria-label="Password" class="form-control" id="password" placeholder="Password"
+                                       required
+                                       th:field="*{password}"
+                                       type="password">
                             </div>
                             <button class="btn login-button mt-4 btn-outline-primary" th:text="${authMode}"
                                     type="submit"></button>
