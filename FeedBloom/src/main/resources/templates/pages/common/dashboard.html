@@ -61,7 +61,7 @@
             </div>
             <div class="row">
                 <div class="col">
-                    <a th:href="@{/feed/home}">
+                    <a th:href="@{/logout}">
                         <img alt="USERS" class="img-fluid" th:src="@{/images/logout.gif}">
                     </a>
                 </div>
@@ -79,7 +79,7 @@
                         Create Feedback</a>
                 </div>
             </div>
-            <div class="row">
+            <div class="row card p-5 mt-3">
                 <div class="col">
                     <form method="post" th:action="@{/feedback/add}">
                         <div class="input-group mb-3">
@@ -101,10 +101,10 @@
                         </div>
                         <div class="input-group mb-3">
                             <span class="input-group-text">Description</span>
-                            <input aria-label="Description" class="form-control" id="description"
-                                   placeholder="description"
-                                   required
-                                   type="text">
+                            <textarea aria-label="Description" class="form-control" id="description"
+                                      placeholder="description"
+                                      required
+                                      type="text"> </textarea>
                         </div>
                         <div class="input-group mb-3">
                             <span class="input-group-text">Attachment</span>
@@ -112,7 +112,14 @@
                                    required
                                    type="text">
                         </div>
-                        <button class="btn login-button mt-4 btn-outline-primary" type="submit">Add Feedback</button>
+                        <div class="row">
+                            <div class="col"></div>
+                            <button class="btn login-button mt-4 btn-outline-primary col" type="submit">Add
+                                Feedback
+                            </button>
+                            <div class="col"></div>
+                        </div>
+
                     </form>
                 </div>
             </div>
