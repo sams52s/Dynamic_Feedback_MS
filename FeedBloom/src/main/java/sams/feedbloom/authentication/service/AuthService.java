@@ -31,7 +31,7 @@ public class AuthService {
 	
 	@Transactional
 	public AuthResponse registerUser(RegisterRequest request) {
-		if (userRepository.findByEmail(request.getEmail()).isPresent()) {
+		if (userRepository.findByEmailIgnoreCase(request.getEmail()).isPresent()) {
 			log.warn("User registration failed: Email {} already exists", request.getEmail());
 			throw new EmailAlreadyExistsException("Email already exists");
 		}
@@ -49,7 +49,7 @@ public class AuthService {
 				new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
 		                                  );
 		
-		User user = userRepository.findByEmail(request.getEmail())
+		User user = userRepository.findByEmailIgnoreCase(request.getEmail())
 		                          .orElseThrow(() -> new UserNotFoundException("Invalid email or password"));
 		
 		log.info("User logged in successfully: {}", user.getEmail());
@@ -57,7 +57,7 @@ public class AuthService {
 	}
 	
 	public UserDTO findUserByEmail(String email) {
-		return userRepository.findByEmail(email)
+		return userRepository.findByEmailIgnoreCase(email)
 		                     .map(UserMapper::mapToDto)
 		                     .orElseThrow(() -> new UserNotFoundException("User not found"));
 	}

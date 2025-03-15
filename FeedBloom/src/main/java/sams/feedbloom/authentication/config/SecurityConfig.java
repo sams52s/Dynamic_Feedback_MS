@@ -21,14 +21,9 @@ import sams.feedbloom.authentication.service.CustomUserDetailsService;
 public class SecurityConfig {
 	
 	private static final String[] PUBLIC_ENDPOINTS = {
-			"/", "/register", "/login", "/api/login", "/dashboard",
-			"/error",
-			"/home",
-			"/query/**",
-			"/email/**",
-			"/css/**",
-			"/js/**",
-			"/images/**"
+			"/", "/register", "/login", "/api/login", "/feedbacks/**",
+			"/error", "/home", "/query/**", "/email/**",
+			"/css/**", "/js/**", "/images/**"
 	};
 	private final CustomUserDetailsService customUserDetailsService;
 	private final JwtAuthenticationFilter jwtAuthenticationFilter;
