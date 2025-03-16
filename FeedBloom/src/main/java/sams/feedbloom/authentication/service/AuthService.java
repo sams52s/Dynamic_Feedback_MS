@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -45,19 +47,29 @@ public class AuthService {
 	}
 	
 	public AuthResponse loginUser(LoginRequest request) {
-		authenticationManager.authenticate(
+		Authentication authentication = authenticationManager.authenticate(
 				new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
-		                                  );
-		
-		User user = userRepository.findByEmailIgnoreCase(request.getEmail())
-		                          .orElseThrow(() -> new UserNotFoundException("Invalid email or password"));
-		
-		log.info("User logged in successfully: {}", user.getEmail());
+		                                                                  );
+		User user;
+		if (authentication.isAuthenticated()) {
+			user = userRepository.findByEmailIgnoreCase(request.getEmail())
+			                     .orElseThrow(() -> new UserNotFoundException("Invalid email or password"));
+			
+			log.info("User logged in successfully: {}", user.getEmail());
+		} else {
+			throw new UserNotFoundException("User Authentication failed: Invalid email or password");
+		}
 		return generateAuthResponse(user);
 	}
 	
 	public UserDTO findUserByEmail(String email) {
 		return userRepository.findByEmailIgnoreCase(email)
+		                     .map(UserMapper::mapToDto)
+		                     .orElseThrow(() -> new UserNotFoundException("User not found"));
+	}
+	
+	public UserDTO findUserById(Long id) {
+		return userRepository.findById(id)
 		                     .map(UserMapper::mapToDto)
 		                     .orElseThrow(() -> new UserNotFoundException("User not found"));
 	}
@@ -71,5 +83,21 @@ public class AuthService {
 		
 		String jwtToken = jwtUtil.generateToken(userDetails);
 		return new AuthResponse(UserMapper.mapToDto(user), jwtToken);
+	}
+	
+	public UserDTO getAuthenticatedUserInfo() {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		
+		if (authentication == null || !authentication.isAuthenticated()) {
+			throw new UserNotFoundException("No authenticated user found");
+		}
+		
+		Object principal = authentication.getPrincipal();
+		if (principal instanceof UserDetails userDetails) {
+			String email = userDetails.getUsername();
+			return findUserByEmail(email);
+		} else {
+			throw new UserNotFoundException("Invalid user authentication details");
+		}
 	}
 }

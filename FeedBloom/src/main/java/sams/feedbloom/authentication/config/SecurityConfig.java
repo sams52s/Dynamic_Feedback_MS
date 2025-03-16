@@ -4,8 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.ProviderManager;
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -21,7 +22,7 @@ import sams.feedbloom.authentication.service.CustomUserDetailsService;
 public class SecurityConfig {
 	
 	private static final String[] PUBLIC_ENDPOINTS = {
-			"/", "/register", "/login", "/api/login", "/feedbacks/**",
+			"/", "/register", "/login", "/api/login",
 			"/error", "/home", "/query/**", "/email/**",
 			"/css/**", "/js/**", "/images/**"
 	};
@@ -48,10 +49,15 @@ public class SecurityConfig {
 	}
 	
 	@Bean
-	public AuthenticationManager authenticationManager() {
+	public AuthenticationProvider authenticationProvider() {
 		DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
 		provider.setUserDetailsService(customUserDetailsService);
 		provider.setPasswordEncoder(passwordEncoder());
-		return new ProviderManager(provider);
+		return provider;
+	}
+	
+	@Bean
+	public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+		return authenticationConfiguration.getAuthenticationManager();
 	}
 }

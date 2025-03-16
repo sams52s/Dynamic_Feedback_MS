@@ -1,5 +1,7 @@
 package sams.feedbloom.authentication.controller;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -44,11 +46,20 @@ public class AuthController {
 	}
 	
 	@PostMapping("/login")
-	public String loginUser(@Valid @ModelAttribute LoginRequest request, Model model) {
-		AuthResponse response = authService.loginUser(request);
-		model.addAttribute("user", authService.findUserByEmail(response.getUser().getEmail()));
-//		return "pages/common/dashboard";
-		return "redirect:/feedbacks/dashboard/" + response.getUser().getEmail();
+	public String loginUser(@Valid @ModelAttribute LoginRequest request, Model model, HttpServletResponse response) {
+		AuthResponse authResponse = authService.loginUser(request);
+		
+		// Add the JWT token to the response (e.g., as a cookie)
+		Cookie jwtCookie = new Cookie("jwt", authResponse.getToken());
+		jwtCookie.setHttpOnly(true);
+		jwtCookie.setPath("/feedbacks");
+		response.addCookie(jwtCookie);
+		jwtCookie.setMaxAge(60 * 60);
+		
+		// Add user details to the model
+		model.addAttribute("user", authService.findUserByEmail(authResponse.getUser().getEmail()));
+		
+		return "redirect:/feedbacks/dashboard";
 	}
 
 //	@PostMapping("/api/login")
