@@ -10,9 +10,11 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CommonDTO {
-	private Boolean isDeleted;
 	private LocalDateTime createdAt;
+	private String createdBy;
 	private LocalDateTime updatedAt;
+	private String updatedBy;
 	private LocalDateTime deletedAt;
 	private String deletedBy;
+	private Boolean isDeleted;
 }

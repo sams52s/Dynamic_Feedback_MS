@@ -12,13 +12,19 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @MappedSuperclass
-public class Common {
+public class CommonEntity {
 	@Column(name = "is_deleted", nullable = false)
 	private Boolean isDeleted = false;
 	
 	@CreationTimestamp
 	@Column(name = "created_at", updatable = false, nullable = false)
 	private LocalDateTime createdAt = LocalDateTime.now();
+	
+	@Column(name = "created_by")
+	private String createdBy;
+	
+	@Column(name = "updated_by")
+	private String updatedBy;
 	
 	@UpdateTimestamp
 	@Column(name = "updated_at")
