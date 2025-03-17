@@ -9,9 +9,8 @@ import sams.feedbloom.common.dto.CommonDTO;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProjectRequest extends CommonDTO {
+public class ProjectDto extends CommonDTO {
 	@NotBlank(message = "Project name cannot be blank")
 	private String name;
 	private Long id;
-	private String createdBy;
 }
