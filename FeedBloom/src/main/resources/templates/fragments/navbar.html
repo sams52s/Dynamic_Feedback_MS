@@ -1,52 +1,78 @@
-<nav class="navbar navbar-dark bg-dark fixed-top" id="topNavbar"
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark main-menu fixed-top" id="topNavbar"
+     sec:authorize="isFullyAuthenticated()"
      th:fragment="topNavbar">
     <div class="container-fluid">
-        <a class="navbar-brand" href="#">Home</a>
-        <button aria-controls="offcanvasDarkNavbar" aria-label="Toggle navigation" class="navbar-toggler"
-                data-bs-target="#offcanvasDarkNavbar"
-                data-bs-toggle="offcanvas" type="button">
-            <span class="navbar-toggler-icon"></span>
+        <a class="navbar-brand home-menu" href="#" id="home-menu" th:href="@{/web/feedbacks/dashboard}">FeedBloom</a>
+        <button aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler"
+                data-bs-target="#navbarNav" data-bs-toggle="collapse"
+                type="button">
+            <i class="fas fa-bars"></i>
         </button>
-        <div aria-labelledby="offcanvasDarkNavbarLabel" class="offcanvas offcanvas-end text-bg-dark"
-             id="offcanvasDarkNavbar"
-             tabindex="-1">
-            <div class="offcanvas-header">
-                <h5 class="offcanvas-title" id="offcanvasDarkNavbarLabel">Profile</h5>
-                <button aria-label="Close" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"
-                        type="button"></button>
-            </div>
-            <div class="offcanvas-body">
-                <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
-                    <li class="nav-item">
-                        <div class="row p-2">
-                            <a class="nav-link active col-lg-10" href="#" th:text="${user.name}"></a>
-                            <a class="nav-link active col-lg-2" href="#">Edit</a>
-                        </div>
 
-                    </li>
-                    <li class="nav-item">
-                        <span th:text="${user.role}"></span>
-                    </li>
-                    <li class="nav-item">
-                        <span th:text="${user.email}"></span>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a aria-expanded="false" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#"
-                           role="button">
-                            Dropdown
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-dark">
-                            <li><a class="dropdown-item" href="#">Action</a></li>
-                            <li><a class="dropdown-item" href="#">Another action</a></li>
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-                            <li><a class="dropdown-item" href="#">Something else here</a></li>
-                        </ul>
-                    </li>
-                </ul>
-                <a class="btn btn-danger" th:href="@{/logout}">Log out</a>
+        <div class="collapse navbar-collapse" id="navbarNav">
+
+            <ul class="navbar-nav nav nav-tabs me-auto mb-2 mb-lg-0">
+
+                <li class="nav-item" id="dashboard-menu">
+                    <a class="nav-link hover-effect text-nowrap" data-menu="dashboard"
+                       href="#"
+                       th:href="@{/web/feedbacks/dashboard}">Feed Dashboard</a>
+                </li>
+                <li class="nav-item" id="projects-menu"
+                    sec:authorize="hasRole('ROLE_MANAGER') || hasRole('ROLE_SUPER_ADMIN')">
+                    <a class="nav-link hover-effect text-nowrap" data-menu="projects"
+                       href="#"
+                       th:href="@{/web/project/dashboard}">Projects</a>
+                </li>
+                <li class="nav-item" id="users-menu"
+                    sec:authorize="hasRole('ROLE_MANAGER') || hasRole('ROLE_SUPER_ADMIN')">
+                    <a class="nav-link hover-effect" data-menu="users" href="#"
+                       th:href="@{/web/user/dashboard}">Users</a>
+                </li>
+            </ul>
+
+            <div class="text-light font-weight-bolder">
+
             </div>
+
+            <div class="profile" style="position: relative;">
+
+                <div class="dropdown">
+
+                    <button aria-expanded="false" class="btn btn-secondary dropdown-toggle"
+                            data-bs-toggle="dropdown" id="dropdownMenuLink" sec:authorize="isFullyAuthenticated()"
+                            type="button">
+                        <span th:text="${user.name}"></span>
+                    </button>
+
+                    <ul aria-labelledby="dropdownMenuLink" class="dropdown-menu" id="userInfo">
+                        <li sec:authorize="isFullyAuthenticated()"><a class="dropdown-item" href="#"
+                                                                      th:href="@{/web/profile}">Profile</a></li>
+                        <li sec:authorize="isFullyAuthenticated()"><a class="dropdown-item" href="#"
+                                                                      th:href="@{/web/profile-edit}">Edit Profile</a>
+                        </li>
+                        <li sec:authorize="isFullyAuthenticated()"><a class="dropdown-item" href="#"
+                                                                      th:href="@{/web/logout}">Logout</a></li>
+                    </ul>
+                </div>
+            </div>
+
         </div>
+
+
     </div>
+    <script>
+        $(document).ready(function () {
+            $('#dataTable').DataTable({
+                paging: true,
+                searching: true,
+                ordering: true,
+                info: true,
+                lengthMenu: [5, 10, 25, 50],
+                columnDefs: [
+                    {orderable: false, targets: [2]}
+                ]
+            });
+        });
+    </script>
 </nav>
