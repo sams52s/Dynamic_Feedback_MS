@@ -1,9 +1,9 @@
-package sams.feedbloom.authentication.dto;
+package sams.feedbloom.user.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import sams.feedbloom.authentication.entity.UserRole;
+import sams.feedbloom.user.entity.UserRole;
 
 @Data
 @NoArgsConstructor

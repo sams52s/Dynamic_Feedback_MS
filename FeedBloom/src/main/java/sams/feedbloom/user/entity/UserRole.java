@@ -1,4 +1,4 @@
-package sams.feedbloom.authentication.entity;
+package sams.feedbloom.user.entity;
 
 public enum UserRole {
 	USER,

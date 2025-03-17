@@ -1,8 +1,8 @@
 package sams.feedbloom.authentication.util;
 
 import sams.feedbloom.authentication.dto.RegisterRequest;
-import sams.feedbloom.authentication.dto.UserDTO;
-import sams.feedbloom.authentication.entity.User;
+import sams.feedbloom.user.dto.UserDTO;
+import sams.feedbloom.user.entity.User;
 
 public class UserMapper {
 	

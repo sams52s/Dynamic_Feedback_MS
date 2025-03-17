@@ -1,4 +1,4 @@
-package sams.feedbloom.authentication.entity;
+package sams.feedbloom.user.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;

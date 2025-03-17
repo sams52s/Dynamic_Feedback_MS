@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head :: head">
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row bg-black">
+        <div class="col"></div>
+        <div class="col-5">
+            <div th:replace="fragments/navbar :: topNavbar"></div>
+        </div>
+        <div class="col"></div>
+    </div>
+
+    <div class="row mt-5 pt-4">
+        <div class="col-lg"></div>
+        <div class="col-5">
+            <div class="row">
+                <div class="col-10 text-start card">
+                    <h3 class="text-start card-title">Users Dashboard</h3>
+                </div>
+            </div>
+            <div class="row card p-5 mt-3">
+                <h1>ALL USERS</h1>
+                <table class="uk-table uk-table-hover uk-table-striped" id="dataTable" style="width:100%">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <!-- Thymeleaf will populate this dynamically -->
+                    <tr th:each="user : ${userList}">
+                        <td th:text="${user.id}"></td>
+                        <td th:text="${user.name}"></td>
+                        <td th:text="${user.email}"></td>
+                        <td th:text="${user.role}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col-lg"></div>
+
+    </div>
+</div>
+<script>
+    document.getElementById("users-menu").classList.add("selected");
+</script>
+</body>
+</html>
