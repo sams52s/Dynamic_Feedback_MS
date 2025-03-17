@@ -10,7 +10,7 @@ import sams.feedbloom.feedback.entity.FeedbackCategory;
 import sams.feedbloom.feedback.entity.FeedbackPriority;
 import sams.feedbloom.feedback.entity.FeedbackStatus;
 import sams.feedbloom.feedback.service.FeedbackService;
-import sams.feedbloom.project.dto.ProjectResponse;
+import sams.feedbloom.project.dto.ProjectDto;
 import sams.feedbloom.project.service.ProjectService;
 import sams.feedbloom.user.dto.UserDTO;
 
@@ -28,7 +28,7 @@ public class FeedbackController {
 	@GetMapping("/dashboard")
 	public String showDashboard(Model model) {
 		UserDTO userInfo = authService.getAuthenticatedUserInfo();
-		List<ProjectResponse> projectResponse = projectService.getAllProjects();
+		List<ProjectDto> projectResponse = projectService.getAllProjects();
 		model.addAttribute("user", userInfo);
 		model.addAttribute("category", FeedbackCategory.values());
 		model.addAttribute("project", projectResponse);

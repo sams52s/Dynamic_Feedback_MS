@@ -3,7 +3,7 @@ package sams.feedbloom.feedback.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import sams.feedbloom.common.entity.Common;
+import sams.feedbloom.common.entity.CommonEntity;
 import sams.feedbloom.user.entity.User;
 
 @Getter
@@ -13,7 +13,7 @@ import sams.feedbloom.user.entity.User;
 		@Index(name = "idx_feedback_history_changed_by", columnList = "changed_by"),
 		@Index(name = "idx_feedback_history_feedback_id", columnList = "feedback_id")
 })
-public class FeedbackHistory extends Common {
+public class FeedbackHistory extends CommonEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
