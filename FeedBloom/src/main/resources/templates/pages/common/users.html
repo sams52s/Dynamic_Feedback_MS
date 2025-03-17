@@ -29,6 +29,7 @@
                         <th>Name</th>
                         <th>Email</th>
                         <th>Role</th>
+                        <th style="width: 20%; text-align: right;">Action</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -38,6 +39,15 @@
                         <td th:text="${user.name}"></td>
                         <td th:text="${user.email}"></td>
                         <td th:text="${user.role}"></td>
+                        <td style="text-align: right;">
+                            <button class="btn btn-sm btn-outline-light edit-btn">
+                                <img alt="edit" class="action_icon" src="/images/edit.png">
+                            </button>
+                            <a class="btn btn-sm btn-outline-danger"
+                               th:href="@{/web/project/{id}/delete(id=${project.id})}">
+                                <img alt="delete" class="action_icon" src="/images/delete.png">
+                            </a>
+                        </td>
                     </tr>
                     </tbody>
                 </table>
