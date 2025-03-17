@@ -1,74 +1,20 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>FeedBloom</title>
-    <link rel="stylesheet" th:href="@{/css/styles.css}" type="text/css"/>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<head th:replace="fragments/head :: head">
 </head>
 <body>
 <div class="container-fluid">
-    <!--    <div class="row">-->
-    <!--    </div>-->
     <div class="row bg-black">
-        <div class="col">
-            <h1 class="text-white">Feedbloom</h1>
+        <div class="col"></div>
+        <div class="col-5">
+            <div th:replace="fragments/navbar :: topNavbar"></div>
         </div>
+        <div class="col"></div>
     </div>
 
     <div class="row mt-5 pt-4">
-        <div class="col-1">
-            <div class="row">
-                <div class="col">
-                    <a th:href="@{/feed/home}">
-                        <img alt="HOME" class="img-fluid"
-                             th:src="@{/images/home.gif}">
-                    </a>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col">
-                    <a th:href="@{/feed/home}">
-                        <img alt="PROFILE" class="img-fluid" th:src="@{/images/profile.gif}">
-                    </a>
-                </div>
-            </div>
-            <div class="card">
-                <div class="row">
-                    <a th:href="@{/feed/home}">
-                        <h5 class="col text-start card-title">
-                            <a class="nav-link active" href="#" th:text="${user.name}"></a>
-                        </h5>
-                    </a>
-                </div>
-                <div class="row">
-                    <span class="card-text" th:text="${user.email}"></span>
-                </div>
-                <div class="row">
-                    <span class="card-text" th:text="${user.role}"></span>
-                </div>
-                <div class="row">
-                    <a class="btn btn-success align-content-center" th:href="@{/user/edit}">Edit</a>
-                </div>
-
-            </div>
-            <div class="row">
-                <div class="col">
-                    <a th:href="@{/feed/home}">
-                        <img alt="USERS" class="img-fluid" th:src="@{/images/user.gif}">
-                    </a>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col">
-                    <a th:href="@{/logout}">
-                        <img alt="USERS" class="img-fluid" th:src="@{/images/logout.gif}">
-                    </a>
-                </div>
-            </div>
-        </div>
-        <div class="col-1"></div>
-        <div class="col-8">
+        <div class="col-lg"></div>
+        <div class="col-5">
             <div class="row">
                 <div class="col-10 text-start card">
                     <h3 class="text-start card-title">Feed</h3>
@@ -78,6 +24,22 @@
                        th:href="@{/feedbacks/add}">+
                         Create Feedback</a>
                 </div>
+            </div>
+            <div class="row card p-5 mt-3">
+                <table class="uk-table uk-table-hover uk-table-striped" id="dataTable" style="width:100%">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Feedback</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="user : ${userList}">
+                        <td th:text="${user.id}"></td>
+                        <td th:text="${user.name}"></td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
             <div class="row card p-5 mt-3">
                 <div class="col">
@@ -126,10 +88,12 @@
             </div>
             <!--            <div th:replace="fragments/addFeedbackModal :: addFeedbackModal"></div>-->
         </div>
+        <div class="col-lg"></div>
+
     </div>
 </div>
-<!-- Bootstrap JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
+<script>
+    document.getElementById("dashboard-menu").classList.add("selected");
+</script>
 </body>
 </html>
