@@ -3,8 +3,8 @@ package sams.feedbloom.feedback.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import sams.feedbloom.authentication.entity.User;
 import sams.feedbloom.common.entity.Common;
+import sams.feedbloom.user.entity.User;
 
 @Getter
 @Setter

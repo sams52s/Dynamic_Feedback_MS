@@ -2,9 +2,9 @@ package sams.feedbloom.feedback.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import sams.feedbloom.authentication.entity.User;
 import sams.feedbloom.common.entity.Common;
 import sams.feedbloom.project.entity.Project;
+import sams.feedbloom.user.entity.User;
 
 @Data
 @Entity

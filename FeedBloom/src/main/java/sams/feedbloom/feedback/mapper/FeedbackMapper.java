@@ -1,9 +1,9 @@
 package sams.feedbloom.feedback.mapper;
 
-import sams.feedbloom.authentication.entity.User;
 import sams.feedbloom.feedback.dto.FeedbackResponse;
 import sams.feedbloom.feedback.entity.Feedback;
 import sams.feedbloom.project.entity.Project;
+import sams.feedbloom.user.entity.User;
 
 public class FeedbackMapper {
 	public static Feedback mapToEntity(FeedbackResponse feedbackResponse) {

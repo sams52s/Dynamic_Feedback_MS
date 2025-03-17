@@ -4,28 +4,34 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import sams.feedbloom.authentication.dto.UserDTO;
 import sams.feedbloom.authentication.service.AuthService;
 import sams.feedbloom.feedback.dto.FeedbackResponse;
 import sams.feedbloom.feedback.entity.FeedbackCategory;
 import sams.feedbloom.feedback.entity.FeedbackPriority;
 import sams.feedbloom.feedback.entity.FeedbackStatus;
 import sams.feedbloom.feedback.service.FeedbackService;
+import sams.feedbloom.project.dto.ProjectResponse;
+import sams.feedbloom.project.service.ProjectService;
+import sams.feedbloom.user.dto.UserDTO;
 
 import java.util.List;
 
 @Controller
-@RequestMapping("/feedbacks")
+@RequestMapping("/web/feedbacks")
 @RequiredArgsConstructor
 public class FeedbackController {
 	private final AuthService authService;
 	private final FeedbackService feedbackService;
+	private final ProjectService projectService;
+	
 	
 	@GetMapping("/dashboard")
 	public String showDashboard(Model model) {
 		UserDTO userInfo = authService.getAuthenticatedUserInfo();
+		List<ProjectResponse> projectResponse = projectService.getAllProjects();
 		model.addAttribute("user", userInfo);
 		model.addAttribute("category", FeedbackCategory.values());
+		model.addAttribute("project", projectResponse);
 		model.addAttribute("priority", FeedbackPriority.values());
 		model.addAttribute("status", FeedbackStatus.values());
 		
