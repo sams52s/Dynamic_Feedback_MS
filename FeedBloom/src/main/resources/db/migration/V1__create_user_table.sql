@@ -6,10 +6,12 @@ CREATE TABLE users
     password   VARCHAR(255)        NOT NULL,
     role       VARCHAR(50)         NOT NULL DEFAULT 'USER',
     created_at TIMESTAMP                    DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP                    DEFAULT NULL,
-    is_deleted BOOLEAN                      DEFAULT FALSE,
+    created_by VARCHAR(100)                 DEFAULT NULL,
     deleted_at TIMESTAMP                    DEFAULT NULL,
-    deleted_by VARCHAR(100)                 DEFAULT NULL
+    is_deleted BOOLEAN                      DEFAULT FALSE,
+    deleted_by VARCHAR(100)                 DEFAULT NULL,
+    updated_at TIMESTAMP                    DEFAULT NULL,
+    updated_by VARCHAR(100)                 DEFAULT NULL
 );
 
 CREATE INDEX idx_users_email ON users (email);

@@ -5,10 +5,12 @@ CREATE TABLE feedback_history
     changed_by         BIGINT NOT NULL,
     change_description TEXT   NOT NULL,
     created_at         TIMESTAMP    DEFAULT CURRENT_TIMESTAMP,
-    updated_at         TIMESTAMP    DEFAULT NULL,
-    is_deleted         BOOLEAN      DEFAULT FALSE,
+    created_by         VARCHAR(100) DEFAULT NULL,
     deleted_at         TIMESTAMP    DEFAULT NULL,
+    is_deleted         BOOLEAN      DEFAULT FALSE,
     deleted_by         VARCHAR(100) DEFAULT NULL,
+    updated_at         TIMESTAMP    DEFAULT NULL,
+    updated_by         VARCHAR(100) DEFAULT NULL,
     FOREIGN KEY (feedback_id) REFERENCES feedback (id) ON DELETE CASCADE,
     FOREIGN KEY (changed_by) REFERENCES users (id) ON DELETE CASCADE
 );
@@ -22,10 +24,12 @@ CREATE TABLE feedback_attachment
     feedback_id    BIGINT NOT NULL,
     attachment_url TEXT   NOT NULL,
     created_at     TIMESTAMP    DEFAULT CURRENT_TIMESTAMP,
-    updated_at     TIMESTAMP    DEFAULT NULL,
-    is_deleted     BOOLEAN      DEFAULT FALSE,
+    created_by     VARCHAR(100) DEFAULT NULL,
     deleted_at     TIMESTAMP    DEFAULT NULL,
+    is_deleted     BOOLEAN      DEFAULT FALSE,
     deleted_by     VARCHAR(100) DEFAULT NULL,
+    updated_at     TIMESTAMP    DEFAULT NULL,
+    updated_by     VARCHAR(100) DEFAULT NULL,
     FOREIGN KEY (feedback_id) REFERENCES feedback (id) ON DELETE CASCADE
 );
 

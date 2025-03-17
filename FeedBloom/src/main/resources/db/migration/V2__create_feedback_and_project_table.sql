@@ -1,12 +1,13 @@
 CREATE TABLE projects (
     id SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
-    created_by VARCHAR(100) DEFAULT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT NULL,
-    is_deleted BOOLEAN DEFAULT FALSE,
-    deleted_at TIMESTAMP DEFAULT NULL,
-    deleted_by VARCHAR(100) DEFAULT NULL
+    created_at TIMESTAMP                    DEFAULT CURRENT_TIMESTAMP,
+    created_by VARCHAR(100)                 DEFAULT NULL,
+    deleted_at TIMESTAMP                    DEFAULT NULL,
+    is_deleted BOOLEAN                      DEFAULT FALSE,
+    deleted_by VARCHAR(100)                 DEFAULT NULL,
+    updated_at TIMESTAMP                    DEFAULT NULL,
+    updated_by VARCHAR(100)                 DEFAULT NULL
 );
 
 CREATE TABLE feedback (
@@ -18,11 +19,13 @@ CREATE TABLE feedback (
     status VARCHAR(50) NOT NULL DEFAULT 'PENDING',
     category VARCHAR(50) NOT NULL DEFAULT 'IMPROVEMENT',
     priority VARCHAR(50) NOT NULL DEFAULT 'LOW',
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT NULL,
-    is_deleted BOOLEAN DEFAULT FALSE,
-    deleted_at TIMESTAMP DEFAULT NULL,
-    deleted_by VARCHAR(100) DEFAULT NULL,
+    created_at TIMESTAMP                    DEFAULT CURRENT_TIMESTAMP,
+    created_by VARCHAR(100)                 DEFAULT NULL,
+    deleted_at TIMESTAMP                    DEFAULT NULL,
+    is_deleted BOOLEAN                      DEFAULT FALSE,
+    deleted_by VARCHAR(100)                 DEFAULT NULL,
+    updated_at TIMESTAMP                    DEFAULT NULL,
+    updated_by VARCHAR(100)                 DEFAULT NULL,
     CONSTRAINT fk_feedback_user FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
     CONSTRAINT fk_feedback_project FOREIGN KEY (project_id) REFERENCES projects (id) ON DELETE CASCADE
 );

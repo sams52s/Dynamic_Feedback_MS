@@ -4,11 +4,13 @@ CREATE TABLE comment
     user_id     BIGINT NOT NULL,
     feedback_id BIGINT NOT NULL,
     content     TEXT   NOT NULL,
-    created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at  TIMESTAMP DEFAULT NULL,
-    is_deleted  BOOLEAN   DEFAULT FALSE,
-    deleted_at  TIMESTAMP DEFAULT NULL,
-    deleted_by  BIGINT    DEFAULT NULL,
+    created_at  TIMESTAMP    DEFAULT CURRENT_TIMESTAMP,
+    created_by  VARCHAR(100) DEFAULT NULL,
+    deleted_at  TIMESTAMP    DEFAULT NULL,
+    is_deleted  BOOLEAN      DEFAULT FALSE,
+    deleted_by  VARCHAR(100) DEFAULT NULL,
+    updated_at  TIMESTAMP    DEFAULT NULL,
+    updated_by  VARCHAR(100) DEFAULT NULL,
     FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
     FOREIGN KEY (feedback_id) REFERENCES feedback (id) ON DELETE CASCADE
 );
@@ -23,10 +25,12 @@ CREATE TABLE approval
     approved_by     BIGINT  NOT NULL,
     approval_status BOOLEAN NOT NULL DEFAULT FALSE,
     created_at      TIMESTAMP        DEFAULT CURRENT_TIMESTAMP,
-    updated_at      TIMESTAMP        DEFAULT NULL,
-    is_deleted      BOOLEAN          DEFAULT FALSE,
+    created_by      VARCHAR(100)     DEFAULT NULL,
     deleted_at      TIMESTAMP        DEFAULT NULL,
+    is_deleted      BOOLEAN          DEFAULT FALSE,
     deleted_by      VARCHAR(100)     DEFAULT NULL,
+    updated_at      TIMESTAMP        DEFAULT NULL,
+    updated_by      VARCHAR(100)     DEFAULT NULL,
     FOREIGN KEY (feedback_id) REFERENCES feedback (id) ON DELETE CASCADE,
     FOREIGN KEY (approved_by) REFERENCES users (id) ON DELETE CASCADE
 );
