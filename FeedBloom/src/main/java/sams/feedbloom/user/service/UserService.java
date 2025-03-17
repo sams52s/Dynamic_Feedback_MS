@@ -7,6 +7,7 @@ import sams.feedbloom.authentication.util.UserMapper;
 import sams.feedbloom.user.dto.UserDTO;
 import sams.feedbloom.user.repository.UserRepository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -17,9 +18,37 @@ public class UserService {
 	private final UserRepository userRepository;
 	
 	public List<UserDTO> getAllUsers() {
-		return userRepository.findAll()
+		return userRepository.findByIsDeletedFalse()
 		                     .stream()
 		                     .map(UserMapper::mapToDto)
 		                     .collect(Collectors.toList());
+	}
+	
+	public void updateUser(UserDTO request) {
+		userRepository.findById(request.getId())
+		              .ifPresentOrElse(user -> {
+			              user.setName(request.getName());
+			              user.setEmail(request.getEmail());
+			              user.setRole(request.getRole());
+			              user.setUpdatedAt(request.getUpdatedAt());
+			              user.setUpdatedBy(request.getUpdatedBy());
+			              userRepository.save(user);
+		              }, () -> new RuntimeException("Project not found with ID: " + request.getId()));
+	}
+	
+	public void deleteUser(Long id, String deletedBy) {
+		userRepository.findById(id)
+		              .ifPresentOrElse(user -> {
+			              user.setDeletedBy(deletedBy);
+			              user.setDeletedAt(LocalDateTime.now());
+			              user.setIsDeleted(true);
+			              userRepository.save(user);
+		              }, () -> new RuntimeException("Project not found with ID: " + id));
+	}
+	
+	public UserDTO getUserById(Long id) {
+		return userRepository.findById(id)
+		                     .map(UserMapper::mapToDto)
+		                     .orElseThrow(() -> new RuntimeException("User not found with ID: " + id));
 	}
 }
