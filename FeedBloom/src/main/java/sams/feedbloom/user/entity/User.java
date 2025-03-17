@@ -2,14 +2,14 @@ package sams.feedbloom.user.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import sams.feedbloom.common.entity.Common;
+import sams.feedbloom.common.entity.CommonEntity;
 
 @Data
 @Entity
 @Table(name = "users", indexes = {
 		@Index(name = "idx_user_email", columnList = "email")
 })
-public class User extends Common {
+public class User extends CommonEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;

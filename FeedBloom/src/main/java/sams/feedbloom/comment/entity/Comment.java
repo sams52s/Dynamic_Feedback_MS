@@ -3,7 +3,7 @@ package sams.feedbloom.comment.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import sams.feedbloom.common.entity.Common;
+import sams.feedbloom.common.entity.CommonEntity;
 import sams.feedbloom.feedback.entity.Feedback;
 import sams.feedbloom.user.entity.User;
 
@@ -14,7 +14,7 @@ import sams.feedbloom.user.entity.User;
 		@Index(name = "idx_comment_user_id", columnList = "user_id"),
 		@Index(name = "idx_comment_feedback_id", columnList = "feedback_id")
 })
-public class Comment extends Common {
+public class Comment extends CommonEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
