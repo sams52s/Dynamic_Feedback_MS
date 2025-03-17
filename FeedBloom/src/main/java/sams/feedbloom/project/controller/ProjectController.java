@@ -7,8 +7,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import sams.feedbloom.authentication.service.AuthService;
-import sams.feedbloom.project.dto.ProjectRequest;
-import sams.feedbloom.project.dto.ProjectResponse;
+import sams.feedbloom.project.dto.ProjectDto;
 import sams.feedbloom.project.service.ProjectService;
 import sams.feedbloom.user.dto.UserDTO;
 
@@ -25,14 +24,14 @@ public class ProjectController {
 	public String showDashboard(Model model) {
 		UserDTO userInfo = authService.getAuthenticatedUserInfo();
 		model.addAttribute("user", userInfo);
-		List<ProjectResponse> projectList = projectService.getAllProjects();
-		model.addAttribute("request", new ProjectRequest());
+		List<ProjectDto> projectList = projectService.getAllProjects();
+		model.addAttribute("request", new ProjectDto());
 		model.addAttribute("projectList", projectList);
 		return "pages/common/projects";
 	}
 	
 	@PostMapping("/create")
-	public String createProject(@Valid @ModelAttribute ProjectRequest request) {
+	public String createProject(@Valid @ModelAttribute ProjectDto request) {
 		if (request.getName().isBlank()) {
 			throw new IllegalArgumentException("Project name cannot be blank");
 		}
@@ -43,7 +42,7 @@ public class ProjectController {
 	}
 	
 	@PostMapping("/update")
-	public String updateProject(@Valid @ModelAttribute ProjectRequest request, RedirectAttributes redirectAttributes) {
+	public String updateProject(@Valid @ModelAttribute ProjectDto request, RedirectAttributes redirectAttributes) {
 		if (request.getName().isBlank()) {
 			redirectAttributes.addFlashAttribute("error", "Project name cannot be blank");
 			return "redirect:/web/project/dashboard";
@@ -53,14 +52,24 @@ public class ProjectController {
 			redirectAttributes.addFlashAttribute("error", "Project not found");
 			return "redirect:/web/project/dashboard";
 		}
-		projectService.updateProject(request);
+		UserDTO userInfo = authService.getAuthenticatedUserInfo();
+		
+		ProjectDto projectDto = projectService.getProjectById(request.getId());
+		projectDto.setName(request.getName());
+		projectDto.setUpdatedBy(userInfo.getEmail());
+		projectService.updateProject(projectDto);
 		redirectAttributes.addFlashAttribute("success", "Project updated successfully");
 		return "redirect:/web/project/dashboard";
 	}
 	
 	@GetMapping("/{id}/delete")
 	public String deleteProject(@PathVariable Long id) {
-		projectService.deleteProject(id);
+		UserDTO userInfo = authService.getAuthenticatedUserInfo();
+		ProjectDto projectDto = projectService.getProjectById(id);
+		if (projectDto == null) {
+			throw new IllegalArgumentException("Project not found with ID: " + id);
+		}
+		projectService.deleteProject(id, userInfo.getEmail());
 		return "redirect:/web/project/dashboard";
 	}
 }
