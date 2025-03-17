@@ -8,8 +8,8 @@ import sams.feedbloom.project.dto.ProjectResponse;
 import sams.feedbloom.project.entity.Project;
 import sams.feedbloom.project.repository.ProjectRepository;
 
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -18,29 +18,40 @@ public class ProjectService {
 	private final ProjectRepository projectRepository;
 	
 	@Transactional
-	public ProjectResponse createProject(ProjectRequest request) {
+	public void createProject(ProjectRequest request) {
 		Project project = new Project();
 		project.setName(request.getName());
 		project.setCreatedBy(request.getCreatedBy());
-		
-		Project savedProject = projectRepository.save(project);
-		return mapToResponse(savedProject);
+		projectRepository.save(project);
+	}
+	
+	public void updateProject(ProjectRequest request) {
+		Project project = projectRepository.findById(request.getId())
+		                                   .orElseThrow(() -> new IllegalArgumentException("Project not found with ID: " + request.getId()));
+		project.setName(request.getName());
+		project.setUpdatedAt(LocalDateTime.now());
+		projectRepository.save(project);
 	}
 	
 	public List<ProjectResponse> getAllProjects() {
-		List<Project> projects = projectRepository.findAll();
-		return projects.stream().map(this::mapToResponse).collect(Collectors.toList());
+		return projectRepository.findAll()
+		                        .stream()
+		                        .map(this::mapToResponse)
+		                        .toList();
 	}
 	
 	public ProjectResponse getProjectById(Long id) {
-		Project project = projectRepository.findById(id)
-		                                   .orElseThrow(() -> new RuntimeException("Project not found with ID: " + id));
-		return mapToResponse(project);
+		return projectRepository.findById(id)
+		                        .map(this::mapToResponse)
+		                        .orElseThrow(() -> new IllegalArgumentException("Project not found with ID: " + id));
 	}
 	
 	@Transactional
 	public void deleteProject(Long id) {
-		projectRepository.deleteById(id);
+		projectRepository.findById(id).ifPresentOrElse(
+				projectRepository::delete,
+				() -> {throw new IllegalArgumentException("Project not found with ID: " + id);}
+		                                              );
 	}
 	
 	private ProjectResponse mapToResponse(Project project) {
