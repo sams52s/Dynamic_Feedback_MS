@@ -1,6 +1,5 @@
 package sams.feedbloom.authentication.controller;
 
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -13,12 +12,21 @@ import sams.feedbloom.authentication.dto.AuthResponse;
 import sams.feedbloom.authentication.dto.LoginRequest;
 import sams.feedbloom.authentication.dto.RegisterRequest;
 import sams.feedbloom.authentication.service.AuthService;
+import sams.feedbloom.authentication.util.JwtUtil;
 
 @Controller
 @RequiredArgsConstructor
 public class AuthController {
 	
 	private final AuthService authService;
+
+//	private static void setJwtCookie(HttpServletResponse response, AuthResponse authResponse) {
+//		Cookie jwtCookie = new Cookie("jwt", authResponse.getToken());
+//		jwtCookie.setHttpOnly(true);
+//		jwtCookie.setPath("/web");
+//		response.addCookie(jwtCookie);
+//		jwtCookie.setMaxAge(60 * 60);
+//	}
 	
 	@GetMapping("/")
 	public String redirectToLogin() {
@@ -46,29 +54,22 @@ public class AuthController {
 	}
 	
 	@PostMapping("/login")
-	public String loginUser(@Valid @ModelAttribute LoginRequest request, Model model, HttpServletResponse response) {
+	public String loginUser(@Valid @ModelAttribute LoginRequest request, HttpServletResponse response) {
 		AuthResponse authResponse = authService.loginUser(request);
-		
-		// Add the JWT token to the response (e.g., as a cookie)
-		Cookie jwtCookie = new Cookie("jwt", authResponse.getToken());
-		jwtCookie.setHttpOnly(true);
-		jwtCookie.setPath("/feedbacks");
-		response.addCookie(jwtCookie);
-		jwtCookie.setMaxAge(60 * 60);
-		
-		// Add user details to the model
-		model.addAttribute("user", authService.findUserByEmail(authResponse.getUser().getEmail()));
-		
-		return "redirect:/feedbacks/dashboard";
+		JwtUtil.setJwtCookie(response, authResponse);
+		return "redirect:/web/feedbacks/dashboard";
 	}
 
 //	@PostMapping("/api/login")
-//	public ResponseEntity<AuthResponse> loginUserJson(@Valid @ModelAttribute LoginRequest request) {
-//		return ResponseEntity.ok(authService.loginUser(request));
+//	public ResponseEntity<AuthResponse> loginUserJson(@Valid @RequestBody LoginRequest request, HttpServletResponse response) {
+//		AuthResponse authResponse = authService.loginUser(request);
+//		JwtUtil.setJwtCookie(response, authResponse.getToken());
+//		return ResponseEntity.ok(authResponse);
 //	}
 	
-	@PostMapping("/logout")
-	public String logoutUser() {
+	@GetMapping("/web/logout")
+	public String userLogout(HttpServletResponse response) {
+		JwtUtil.invalidateJwtCookie(response);
 		return "redirect:/login";
 	}
 }

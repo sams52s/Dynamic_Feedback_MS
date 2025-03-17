@@ -13,13 +13,13 @@ import org.springframework.transaction.annotation.Transactional;
 import sams.feedbloom.authentication.dto.AuthResponse;
 import sams.feedbloom.authentication.dto.LoginRequest;
 import sams.feedbloom.authentication.dto.RegisterRequest;
-import sams.feedbloom.authentication.dto.UserDTO;
-import sams.feedbloom.authentication.entity.User;
 import sams.feedbloom.authentication.exception.EmailAlreadyExistsException;
 import sams.feedbloom.authentication.exception.UserNotFoundException;
-import sams.feedbloom.authentication.repository.UserRepository;
 import sams.feedbloom.authentication.util.JwtUtil;
 import sams.feedbloom.authentication.util.UserMapper;
+import sams.feedbloom.user.dto.UserDTO;
+import sams.feedbloom.user.entity.User;
+import sams.feedbloom.user.repository.UserRepository;
 
 @Slf4j
 @Service
