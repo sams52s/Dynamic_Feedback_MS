@@ -62,3 +62,7 @@ body {
 .btn {
     font-weight: bold;
 }
+
+.selectField {
+    max-width: 25rem;
+}
