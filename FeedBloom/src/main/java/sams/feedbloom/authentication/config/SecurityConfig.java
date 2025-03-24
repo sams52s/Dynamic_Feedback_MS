@@ -24,7 +24,7 @@ public class SecurityConfig {
 	private static final String[] PUBLIC_ENDPOINTS = {
 			"/", "/register", "/login", "/api/login",
 			"/error", "/home", "/query/**", "/email/**",
-			"/css/**", "/js/**", "/images/**"
+			"/css/**", "/js/**", "/images/**", "/favicon.ico"
 	};
 	private final CustomUserDetailsService customUserDetailsService;
 	private final JwtAuthenticationFilter jwtAuthenticationFilter;
