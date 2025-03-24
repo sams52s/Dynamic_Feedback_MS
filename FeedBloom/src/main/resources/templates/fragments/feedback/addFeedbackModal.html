@@ -1,0 +1,70 @@
+<div th:fragment="addFeedbackModal">
+    <div aria-hidden="true" aria-labelledby="feedbackAddFormModalLabel" class="modal fade" id="feedbackAddFormModal"
+         tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <form enctype="multipart/form-data" id="feedback-form" method="post"
+                      th:action="@{/web/feedbacks/create}" th:object="${feedbackDto}">
+                    <input id="feedbackId" th:field="*{id}" type="hidden"/>
+
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modal-title">Add Feedback</h5>
+                        <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
+                    </div>
+
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label class="form-label">Project Name</label>
+                            <select class="form-control selectpicker" data-live-search="true" id="projectId"
+                                    required th:field="*{projectId}">
+                                <option value="">Select a project</option>
+                                <option th:each="project : ${projects}" th:text="${project.name}"
+                                        th:value="${project.id}"></option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Feedback Category</label>
+                            <select class="form-control selectpicker" id="category" required th:field="*{category}">
+                                <option value="">Select a category</option>
+                                <option th:each="category : ${categories}" th:text="${category}"
+                                        th:value="${category}"></option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Feedback Priority</label>
+                            <select class="form-control selectpicker" id="priority" required th:field="*{priority}">
+                                <option value="">Select a priority</option>
+                                <option th:each="priority : ${priorities}" th:text="${priority}"
+                                        th:value="${priority}"></option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Attachment</label>
+                            <input class="form-control" id="feedbackFile" name="file" type="file">
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Title</label>
+                            <input class="form-control" id="title" placeholder="Enter title" required
+                                   th:field="*{title}" type="text">
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Description</label>
+                            <textarea class="form-control" id="description" placeholder="Enter description" required
+                                      th:field="*{description}"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" data-bs-dismiss="modal" type="button">Close</button>
+                        <button class="btn btn-primary" id="submit-button" type="submit">Add Feedback</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head :: head">
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row bg-black">
+        <div class="col"></div>
+        <div class="col-5">
+            <div th:replace="fragments/navbar :: topNavbar"></div>
+        </div>
+        <div class="col"></div>
+    </div>
+
+    <div class="row mt-5 pt-4">
+        <div class="col-lg"></div>
+        <div class="col-7">
+            <div class="row">
+                <div class="col text-start card">
+                    <h3 class="text-start card-title">Project Dashboard</h3>
+                </div>
+            </div>
+            <div class="row card p-5 mt-3">
+                <div class="row p-4" id="add-project-form">
+                    <form data-name="project" id="project-form" method="post" th:action="@{/web/project/create}"
+                          th:object="${request}">
+                        <h4>Add Project</h4>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">Project Name</span>
+                            <input aria-label="Name" class="form-control" id="name" placeholder="Enter project name"
+                                   required th:field="*{name}" type="text">
+                            <button class="btn btn-primary" type="submit">Add Project</button>
+                        </div>
+
+                    </form>
+                </div>
+
+                <div class="row p-4" id="update-project-form" style="display: none;">
+                    <form data-name="project-update" id="project-update-form" method="post"
+                          th:action="@{/web/project/update}" th:object="${request}">
+                        <h4>Update Project</h4>
+                        <div class="input-group">
+                            <span class="input-group-text d-none">Project ID</span>
+                            <input aria-label="ID" class="form-control d-none" id="update-id" readonly required
+                                   th:field="*{id}" type="text">
+                            <span class="input-group-text">Project Name</span>
+                            <input aria-label="Name" class="form-control" id="update-name"
+                                   placeholder="Enter project name" required th:field="*{name}" type="text">
+                            <button class="btn btn-success" type="submit">Update Project</button>
+                        </div>
+                    </form>
+                </div>
+
+                <table class="table table-hover table-striped" id="dataTable" style="width:100%">
+                    <thead class="table-dark mt-5">
+                    <tr>
+                        <th class="d-none">ID</th>
+                        <th style="width: 80%; text-align: left;">Project Name</th>
+                        <th style="width: 20%; text-align: right;">Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="project : ${projectList}">
+                        <td class="d-none" id="project-id" th:text="${project.id}"></td>
+                        <td id="project-name" th:text="${project.name}"></td>
+                        <td style="text-align: right;">
+                            <button class="btn btn-sm btn-outline-success edit-btn" data-id="${project.id}"
+                                    th:data-name="${project.name}">
+                                <img alt="edit" class="action_icon" src="/images/edit.png">
+                            </button>
+                            <a class="btn btn-sm btn-outline-danger"
+                               th:href="@{/web/project/{id}/delete(id=${project.id})}">
+                                <img alt="delete" class="action_icon" src="/images/delete.png">
+                            </a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+        <div class="col-lg"></div>
+
+    </div>
+</div>
+<script>
+    document.getElementById("projects-menu").classList.add("selected");
+    $(".edit-btn").click(function () {
+        var row = $(this).closest("tr");
+        var projectId = row.find("#project-id").text().trim();
+        var projectName = row.find("#project-name").text().trim();
+
+
+        console.log("Project ID: " + projectId);
+        console.log("Project Name: " + projectName);
+        $("#update-id").val(projectId);
+        $("#update-name").val(projectName);
+
+        $("#add-project-form").hide();
+        $("#update-project-form").fadeIn();
+    });
+
+    $("#project-update-form").submit(function () {
+        $("#update-project-form").fadeOut();
+        $("#add-project-form").fadeIn();
+    });
+</script>
+</body>
+</html>

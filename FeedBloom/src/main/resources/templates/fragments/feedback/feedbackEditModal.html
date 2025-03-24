@@ -1,0 +1,65 @@
+<div th:fragment="showFeedbackUpdate">
+    <form data-name="feedback-update" id="feedback-update-form" method="post"
+          th:action="@{/web/feedbacks/{id}(id=${feedbackDto.getId()})}">
+
+        <div class="row mb-3 mt-3">
+            <div class="col-10 text-start card p-3">
+                <input class="fs-1 border-0 form-control" id="title" name="title"
+                       th:value="${feedbackDto.getTitle()}">
+            </div>
+            <div class="col-2 text-end">
+                <button class="btn btn-success" id="feedbackEditSubmitBtn" type="submit">Update</button>
+                <button class="btn btn-secondary" id="cancelEditBtn" type="button">Cancel</button>
+            </div>
+        </div>
+
+        <div class="row card p-4 mt-3">
+            <div class="row">
+                <div class="col">
+                    <select class="form-control selectpicker" data-live-search="true" id="projectId"
+                            name="projectId" required>
+                        <option th:each="project : ${projects}"
+                                th:selected="${feedbackDto.getProjectId().equals(project.id)}"
+                                th:text="${project.name}"
+                                th:value="${project.id}"></option>
+                    </select>
+                </div>
+                <div class="col">
+                    <select class="form-control selectpicker" id="category" name="category" required>
+                        <option th:each="category : ${categories}"
+                                th:selected="${feedbackDto.getCategory().equals(category)}"
+                                th:text="${category}"
+                                th:value="${category}"></option>
+                    </select>
+                </div>
+                <div class="col">
+                    <select class="form-control selectpicker" id="priority" name="priority" required>
+                        <option th:each="priority : ${priorities}"
+                                th:selected="${feedbackDto.getPriority().equals(priority)}"
+                                th:text="${priority}"
+                                th:value="${priority}"></option>
+                    </select>
+                </div>
+                <div class="col">
+                    <select class="form-control selectpicker" id="status" name="status" required>
+                        <option th:each="status : ${statuses}"
+                                th:selected="${feedbackDto.getStatus().equals(status)}"
+                                th:text="${status}"
+                                th:value="${status}"></option>
+                    </select>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col">
+                            <textarea class="form-control border-1" id="description" name="description"
+                                      th:text="${feedbackDto.getDescription()}"></textarea>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col">
+                    <input class="form-control" id="feedbackFile" name="file" type="file">
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
