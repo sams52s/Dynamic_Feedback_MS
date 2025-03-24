@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import sams.feedbloom.common.dto.CommonDTO;
+import sams.feedbloom.feedback.entity.Feedback;
+import sams.feedbloom.user.entity.User;
 
 @Data
 @NoArgsConstructor
@@ -13,6 +15,8 @@ import sams.feedbloom.common.dto.CommonDTO;
 public class ApprovalResponse extends CommonDTO {
 	private Long id;
 	private Long feedbackId;
-	private Long approvedBy;
+	private Feedback feedback;
+	private Long approvedById;
+	private User approvedBy;
 	private Boolean approvalStatus;
 }

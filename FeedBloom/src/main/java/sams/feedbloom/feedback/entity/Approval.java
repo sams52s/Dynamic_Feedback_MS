@@ -18,6 +18,8 @@ public class Approval extends CommonEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
+	//TODO: Need to change feedback_id to feedback_by, Feedback feedback to feedbackBy, approved_by to approvedBy, store email instead of id
+	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "feedback_id", nullable = false)
 	private Feedback feedback;

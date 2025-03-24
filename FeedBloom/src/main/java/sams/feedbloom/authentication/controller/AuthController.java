@@ -19,14 +19,6 @@ import sams.feedbloom.authentication.util.JwtUtil;
 public class AuthController {
 	
 	private final AuthService authService;
-
-//	private static void setJwtCookie(HttpServletResponse response, AuthResponse authResponse) {
-//		Cookie jwtCookie = new Cookie("jwt", authResponse.getToken());
-//		jwtCookie.setHttpOnly(true);
-//		jwtCookie.setPath("/web");
-//		response.addCookie(jwtCookie);
-//		jwtCookie.setMaxAge(60 * 60);
-//	}
 	
 	@GetMapping("/")
 	public String redirectToLogin() {
@@ -57,7 +49,7 @@ public class AuthController {
 	public String loginUser(@Valid @ModelAttribute LoginRequest request, HttpServletResponse response) {
 		AuthResponse authResponse = authService.loginUser(request);
 		JwtUtil.setJwtCookie(response, authResponse);
-		return "redirect:/web/feedbacks/dashboard";
+		return "redirect:/web/feedbacks";
 	}
 
 //	@PostMapping("/api/login")
