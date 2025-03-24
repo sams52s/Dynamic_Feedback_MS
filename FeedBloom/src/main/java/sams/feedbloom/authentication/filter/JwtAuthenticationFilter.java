@@ -17,7 +17,7 @@ import sams.feedbloom.authentication.util.JwtUtil;
 
 import java.io.IOException;
 
-@Slf4j  // Enables Logger
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
