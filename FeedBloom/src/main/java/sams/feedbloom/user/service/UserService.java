@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import sams.feedbloom.authentication.util.UserMapper;
 import sams.feedbloom.user.dto.UserDTO;
+import sams.feedbloom.user.entity.User;
 import sams.feedbloom.user.repository.UserRepository;
 
 import java.time.LocalDateTime;
@@ -49,6 +50,11 @@ public class UserService {
 	public UserDTO getUserById(Long id) {
 		return userRepository.findById(id)
 		                     .map(UserMapper::mapToDto)
+		                     .orElseThrow(() -> new RuntimeException("User not found with ID: " + id));
+	}
+	
+	public User getUserEntityById(Long id) {
+		return userRepository.findById(id)
 		                     .orElseThrow(() -> new RuntimeException("User not found with ID: " + id));
 	}
 }
