@@ -38,12 +38,10 @@ $(document).ready(function () {
         }
         $("#statusText").css("color", color);
     }
-
-    // Set initial status color
+    
     let currentStatus = $("#statusText").text().trim();
     updateStatusColor(currentStatus);
 
-    // AJAX call on status change
     $("#onGoStatus").change(function () {
         let newStatus = $(this).val();
         let feedbackId = "[[${feedbackDto.getId()}]]";
