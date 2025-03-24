@@ -1,44 +1,41 @@
 package sams.feedbloom.feedback.mapper;
 
-import sams.feedbloom.feedback.dto.FeedbackResponse;
+import sams.feedbloom.feedback.dto.FeedbackDto;
 import sams.feedbloom.feedback.entity.Feedback;
-import sams.feedbloom.project.entity.Project;
-import sams.feedbloom.user.entity.User;
 
 public class FeedbackMapper {
-	public static Feedback mapToEntity(FeedbackResponse feedbackResponse) {
-		Feedback feedback = new Feedback();
-		feedback.setTitle(feedbackResponse.getTitle());
-		feedback.setDescription(feedbackResponse.getDescription());
+	public static Feedback mapToEntity(FeedbackDto feedbackDto, Feedback feedback) {
 		
-		User user = new User();
-		user.setId(feedbackResponse.getFeedbackBy());
-		feedback.setFeedbackBy(user);
+		feedback.setTitle(feedbackDto.getTitle());
 		
-		Project project = new Project();
-		project.setId(feedbackResponse.getProjectId());
-		feedback.setProject(project);
+		feedback.setDescription(feedbackDto.getDescription());
+		feedback.setFeedbackBy(feedbackDto.getFeedbackBy());
+		feedback.setProject(feedbackDto.getProject());
+		feedback.setStatus(feedbackDto.getStatus());
+		feedback.setCategory(feedbackDto.getCategory());
+		feedback.setPriority(feedbackDto.getPriority());
 		
-		feedback.setStatus(feedbackResponse.getStatus());
-		feedback.setCategory(feedbackResponse.getCategory());
-		feedback.setPriority(feedbackResponse.getPriority());
+		feedback.setCreatedAt(feedbackDto.getCreatedAt());
+		feedback.setCreatedBy(feedbackDto.getCreatedBy());
+		feedback.setUpdatedAt(feedbackDto.getUpdatedAt());
+		feedback.setUpdatedBy(feedbackDto.getUpdatedBy());
 		
 		return feedback;
 	}
 	
-	public static FeedbackResponse mapToResponse(Feedback feedback) {
-		return new FeedbackResponse() {
-			{
-				setId(feedback.getId());
-				setTitle(feedback.getTitle());
-				setDescription(feedback.getDescription());
-				setFeedbackBy(feedback.getFeedbackBy().getId());
-				setProjectId(feedback.getProject().getId());
-				setStatus(feedback.getStatus());
-				setCategory(feedback.getCategory());
-				setPriority(feedback.getPriority());
-				setCreatedAt(feedback.getCreatedAt());
-			}
-		};
+	public static FeedbackDto mapToResponse(Feedback feedback) {
+		FeedbackDto dto = new FeedbackDto();
+		dto.setId(feedback.getId());
+		dto.setTitle(feedback.getTitle());
+		dto.setDescription(feedback.getDescription());
+		dto.setCategory(feedback.getCategory());
+		dto.setPriority(feedback.getPriority());
+		dto.setStatus(feedback.getStatus());
+		dto.setFeedbackBy(feedback.getFeedbackBy());
+		dto.setProjectId(feedback.getProject().getId());
+		dto.setProjectName(feedback.getProject().getName());
+		dto.setCreatedAt(feedback.getCreatedAt());
+		return dto;
 	}
+	
 }
