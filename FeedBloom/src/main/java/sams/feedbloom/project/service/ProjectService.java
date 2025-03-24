@@ -46,6 +46,11 @@ public class ProjectService {
 		                        .orElseThrow(() -> new IllegalArgumentException("Project not found with ID: " + id));
 	}
 	
+	public Project getProjectEntityById(Long id) {
+		return projectRepository.findById(id)
+		                        .orElseThrow(() -> new IllegalArgumentException("Project not found with ID: " + id));
+	}
+	
 	@Transactional
 	public void deleteProject(Long id, String deletedBy) {
 		Project project = projectRepository.findById(id)
