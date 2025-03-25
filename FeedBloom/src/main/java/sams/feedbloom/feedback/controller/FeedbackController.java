@@ -165,17 +165,6 @@ public class FeedbackController {
 		return userService.getUserEntityById(authService.getAuthenticatedUserInfo().getId());
 	}
 	
-	//	private FeedbackHistoryResponse createFeedbackHistory(Feedback feedback, User user, String changeDescription) {
-//		return FeedbackHistoryResponse.builder()
-//		                              .createdBy(user.getEmail())
-//		                              .changedBy(user)
-//		                              .feedback(feedback)
-//		                              .feedbackId(feedback.getId())
-//		                              .changeDescription(changeDescription)
-//		                              .createdAt(LocalDateTime.now())
-//		                              .isDeleted(false)
-//		                              .build();
-//	}
 	private FeedbackHistoryResponse createFeedbackHistory(Feedback feedback, User user, String changeDescription) {
 		FeedbackHistoryResponse feedbackHistoryResponse = new FeedbackHistoryResponse();
 		feedbackHistoryResponse.setCreatedBy(user.getEmail());
