@@ -1,17 +1,6 @@
-document.getElementById("dashboard-menu").classList.add("selected");
-
-document.getElementById("feedbackEditBtn").addEventListener("click", function () {
-    document.getElementById("showFeedback").classList.add("d-none");
-    document.getElementById("showEditFeedback").classList.remove("d-none");
-});
-
-document.getElementById("cancelEditBtn").addEventListener("click", function () {
-    document.getElementById("showEditFeedback").classList.add("d-none");
-    document.getElementById("showFeedback").classList.remove("d-none");
-});
-
-
 $(document).ready(function () {
+    document.getElementById("dashboard-menu").classList.add("selected");
+
     function updateStatusColor(status) {
         let color;
         switch (status) {
@@ -38,14 +27,12 @@ $(document).ready(function () {
         }
         $("#statusText").css("color", color);
     }
-    
+
     let currentStatus = $("#statusText").text().trim();
     updateStatusColor(currentStatus);
-
     $("#onGoStatus").change(function () {
         let newStatus = $(this).val();
-        let feedbackId = "[[${feedbackDto.getId()}]]";
-
+        console.log(feedbackId);
         $.ajax({
             type: "POST",
             url: "/web/feedbacks/update-status",
@@ -100,6 +87,16 @@ $(document).ready(function () {
         }).fail(function () {
             alert("Error updating comment. Please try again.");
         });
+    });
+
+    document.getElementById("feedbackEditBtn").addEventListener("click", function () {
+        document.getElementById("showFeedback").classList.add("d-none");
+        document.getElementById("showEditFeedback").classList.remove("d-none");
+    });
+
+    document.getElementById("cancelEditBtn").addEventListener("click", function () {
+        document.getElementById("showEditFeedback").classList.add("d-none");
+        document.getElementById("showFeedback").classList.remove("d-none");
     });
 });
 

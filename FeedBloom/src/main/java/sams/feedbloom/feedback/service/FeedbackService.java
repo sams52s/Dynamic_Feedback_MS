@@ -25,11 +25,6 @@ public class FeedbackService {
 	private final ProjectRepository projectRepository;
 	
 	
-	public FeedbackDto getById(Long id) {
-		Feedback feedback = feedbackRepository.findByIsDeletedFalseAndId(id);
-		return mapToDto(feedback);
-	}
-	
 	public List<FeedbackDto> getAll() {
 		return getSortedFeedbackDto(feedbackRepository.findByIsDeletedFalse());
 	}
@@ -38,7 +33,7 @@ public class FeedbackService {
 		return getSortedFeedbackDto(feedbackRepository.findByIsDeletedAndCreatedByOrderByCreatedAtAsc(Boolean.FALSE, createdBy));
 	}
 	
-	public void create(FeedbackDto feedbackDto) {
+	public Feedback create(FeedbackDto feedbackDto) {
 		feedbackDto.setCreatedAt(LocalDateTime.now());
 		feedbackDto.setStatus(FeedbackStatus.PENDING);
 		feedbackDto.setIsDeleted(Boolean.FALSE);
@@ -49,7 +44,7 @@ public class FeedbackService {
 		feedbackDto.setProject(project);
 		Feedback feedback = new Feedback();
 		
-		feedbackRepository.save(FeedbackMapper.mapToEntity(feedbackDto, feedback));
+		return feedbackRepository.save(FeedbackMapper.mapToEntity(feedbackDto, feedback));
 	}
 	
 	public void update(FeedbackDto feedbackDto) {
@@ -88,7 +83,11 @@ public class FeedbackService {
 		return dto;
 	}
 	
-	private Feedback findFeedbackById(Long id) {
+	public FeedbackDto getFeedbackDtoById(Long id) {
+		return mapToDto(findFeedbackById(id));
+	}
+	
+	public Feedback findFeedbackById(Long id) {
 		return feedbackRepository.findById(id)
 		                         .orElseThrow(() -> new EntityNotFoundException("Feedback not found with ID: " + id));
 	}

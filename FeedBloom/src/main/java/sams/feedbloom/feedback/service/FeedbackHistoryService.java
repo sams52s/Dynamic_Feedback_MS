@@ -23,7 +23,7 @@ public class FeedbackHistoryService {
 		return mapToResponse(history);
 	}
 	
-	public List<FeedbackHistoryResponse> getByFeedbackId(Long feedbackId) {
+	public LinkedList<FeedbackHistoryResponse> getByFeedbackId(Long feedbackId) {
 		return feedbackHistoryRepository.findByIsDeletedFalseAndFeedbackIdOrderByCreatedAtAsc(feedbackId)
 		                                .stream()
 		                                .sorted(Comparator.comparing(FeedbackHistory::getCreatedAt).reversed())
@@ -37,13 +37,36 @@ public class FeedbackHistoryService {
 		                                .collect(Collectors.toList());
 	}
 	
+	public void create(FeedbackHistoryResponse feedbackHistoryResponse) {
+		feedbackHistoryRepository.save(mapToEntity(feedbackHistoryResponse, new FeedbackHistory()));
+	}
+	
 	private FeedbackHistoryResponse mapToResponse(FeedbackHistory history) {
 		FeedbackHistoryResponse response = new FeedbackHistoryResponse();
 		response.setId(history.getId());
-		response.setFeedbackId(history.getFeedback().getId());
-		response.setChangedBy(history.getChangedBy().getId());
 		response.setCreatedAt(history.getCreatedAt());
+		response.setCreatedBy(history.getCreatedBy());
+		response.setFeedbackId(history.getFeedback().getId());
+		response.setFeedback(history.getFeedback());
 		response.setChangeDescription(history.getChangeDescription());
+		response.setChangedBy(history.getChangedBy());
+		response.setUpdatedAt(history.getUpdatedAt());
+		response.setIsDeleted(history.getIsDeleted());
+		response.setDeletedAt(history.getDeletedAt());
+		response.setDeletedBy(history.getDeletedBy());
 		return response;
+	}
+	
+	private FeedbackHistory mapToEntity(FeedbackHistoryResponse response, FeedbackHistory history) {
+		history.setFeedback(response.getFeedback());
+		history.setChangedBy(response.getChangedBy());
+		history.setChangeDescription(response.getChangeDescription());
+		history.setCreatedAt(response.getCreatedAt());
+		history.setCreatedBy(response.getCreatedBy());
+		history.setUpdatedAt(response.getUpdatedAt());
+		history.setIsDeleted(response.getIsDeleted());
+		history.setDeletedAt(response.getDeletedAt());
+		history.setDeletedBy(response.getDeletedBy());
+		return history;
 	}
 }

@@ -11,10 +11,13 @@ import sams.feedbloom.comment.dto.CommentDto;
 import sams.feedbloom.comment.service.CommentService;
 import sams.feedbloom.feedback.dto.ApprovalResponse;
 import sams.feedbloom.feedback.dto.FeedbackDto;
+import sams.feedbloom.feedback.dto.FeedbackHistoryResponse;
+import sams.feedbloom.feedback.entity.Feedback;
 import sams.feedbloom.feedback.entity.FeedbackCategory;
 import sams.feedbloom.feedback.entity.FeedbackPriority;
 import sams.feedbloom.feedback.entity.FeedbackStatus;
 import sams.feedbloom.feedback.service.ApprovalService;
+import sams.feedbloom.feedback.service.FeedbackHistoryService;
 import sams.feedbloom.feedback.service.FeedbackService;
 import sams.feedbloom.project.dto.ProjectDto;
 import sams.feedbloom.project.service.ProjectService;
@@ -24,6 +27,7 @@ import sams.feedbloom.user.entity.UserRole;
 import sams.feedbloom.user.service.UserService;
 
 import java.time.LocalDateTime;
+import java.util.LinkedList;
 import java.util.List;
 
 @Controller
@@ -37,6 +41,7 @@ public class FeedbackController {
 	private final ProjectService projectService;
 	private final UserService userService;
 	private final CommentService commentService;
+	private final FeedbackHistoryService feedbackHistoryService;
 	
 	@GetMapping
 	public String getAll(Model model) {
@@ -48,8 +53,6 @@ public class FeedbackController {
 		} else {
 			feedbackList = feedbackService.getAll();
 		}
-		LocalDateTime now = LocalDateTime.now();
-		
 		model.addAttribute("feedbackDto", new FeedbackDto());
 		model.addAttribute("feedbackList", feedbackList);
 		model.addAttribute("user", userInfo);
@@ -65,15 +68,18 @@ public class FeedbackController {
 		User user = userService.getUserEntityById(authService.getAuthenticatedUserInfo().getId());
 		feedbackDto.setFeedbackBy(user);
 		feedbackDto.setCreatedBy(user.getEmail());
-		feedbackService.create(feedbackDto);
+		Feedback feedback = feedbackService.create(feedbackDto);
+		feedbackHistoryService.create(createFeedbackHistoryResponse(feedback, user, "Feedback created"));
 		return "redirect:/web/feedbacks?success=Feedback created";
 	}
+	
 	
 	@GetMapping("/{id}")
 	public String getById(@PathVariable Long id, Model model) {
 		UserDTO userInfo = authService.getAuthenticatedUserInfo();
 		List<ProjectDto> projectList = projectService.getAllProjects();
-		FeedbackDto feedbackDto = feedbackService.getById(id);
+		FeedbackDto feedbackDto = feedbackService.getFeedbackDtoById(id);
+		LinkedList<FeedbackHistoryResponse> feedbackHistoryResponse = feedbackHistoryService.getByFeedbackId(id);
 		List<CommentDto> commentList = commentService.getComments(id);
 		if (userInfo.getRole().equals(UserRole.USER) && !feedbackDto.getFeedbackBy().getId().equals(userInfo.getId())) {
 			return "redirect:/web/feedbacks?error=Unauthorized action";
@@ -90,7 +96,9 @@ public class FeedbackController {
 		model.addAttribute("categories", FeedbackCategory.values());
 		model.addAttribute("projects", projectList);
 		model.addAttribute("comments", commentList);
+		model.addAttribute("feedbackHistories", feedbackHistoryResponse);
 		model.addAttribute("priorities", FeedbackPriority.values());
+		
 		return "pages/feedback/one-feedback";
 	}
 	
@@ -98,24 +106,28 @@ public class FeedbackController {
 	@PostMapping("/{id}")
 	public String update(@PathVariable Long id, @ModelAttribute FeedbackDto feedbackDto) {
 		UserDTO userInfo = authService.getAuthenticatedUserInfo();
+		User user = userService.getUserEntityById(userInfo.getId());
+		Feedback feedback = feedbackService.findFeedbackById(id);
 		feedbackDto.setUpdatedBy(userInfo.getEmail());
 		feedbackDto.setStatus(FeedbackStatus.PENDING);
-		if (!feedbackService.getById(id).getFeedbackBy().getId().equals(userInfo.getId())) {
+		if (!feedbackService.getFeedbackDtoById(id).getFeedbackBy().getId().equals(userInfo.getId())) {
 			return "redirect:/web/feedbacks?error=Unauthorized action";
 		}
 		feedbackService.update(feedbackDto);
+		feedbackHistoryService.create(createFeedbackHistoryResponse(feedback, user, "Feedback Updated"));
 		return "redirect:/web/feedbacks/{id}?success=Feedback updated";
 	}
 	
 	@GetMapping("/delete/{id}")
 	public String delete(@PathVariable Long id) {
 		UserDTO userInfo = authService.getAuthenticatedUserInfo();
-		FeedbackDto existingFeedback = feedbackService.getById(id);
+		FeedbackDto existingFeedback = feedbackService.getFeedbackDtoById(id);
 		if (!existingFeedback.getFeedbackBy().getId().equals(userInfo.getId())) {
 			return "redirect:/web/feedbacks?error=Unauthorized action";
 		}
 		
 		feedbackService.delete(id, userInfo.getEmail());
+		feedbackHistoryService.create(createFeedbackHistoryResponse(feedbackService.findFeedbackById(existingFeedback.getId()), userService.getUserEntityById(userInfo.getId()), "Feedback Status Updated"));
 		return "redirect:/web/feedbacks?success=Feedback deleted";
 	}
 	
@@ -124,7 +136,7 @@ public class FeedbackController {
 	public ResponseEntity<String> updateFeedbackStatus(@RequestBody FeedbackDto updateDto) {
 		UserDTO userInfo = authService.getAuthenticatedUserInfo();
 		
-		FeedbackDto feedback = feedbackService.getById(updateDto.getId());
+		FeedbackDto feedback = feedbackService.getFeedbackDtoById(updateDto.getId());
 		if (feedback == null) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Feedback not found");
 		}
@@ -139,7 +151,19 @@ public class FeedbackController {
 		approval.setApprovalStatus(updateDto.getStatus().equals(FeedbackStatus.APPROVED));
 		approvalService.update(approval);
 		feedbackService.update(feedback);
-		
+		feedbackHistoryService.create(createFeedbackHistoryResponse(feedbackService.findFeedbackById(updateDto.getId()), userService.getUserEntityById(userInfo.getId()), "Feedback Status Updated"));
 		return ResponseEntity.ok("Status updated successfully");
+	}
+	
+	private FeedbackHistoryResponse createFeedbackHistoryResponse(Feedback feedback, User user, String changeDescription) {
+		FeedbackHistoryResponse feedbackHistoryResponse = new FeedbackHistoryResponse();
+		feedbackHistoryResponse.setCreatedBy(user.getEmail());
+		feedbackHistoryResponse.setChangedBy(user);
+		feedbackHistoryResponse.setFeedback(feedback);
+		feedbackHistoryResponse.setFeedbackId(feedback.getId());
+		feedbackHistoryResponse.setChangeDescription(changeDescription);
+		feedbackHistoryResponse.setCreatedAt(LocalDateTime.now());
+		feedbackHistoryResponse.setIsDeleted(Boolean.FALSE);
+		return feedbackHistoryResponse;
 	}
 }

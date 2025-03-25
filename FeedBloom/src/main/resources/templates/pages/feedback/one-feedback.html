@@ -19,12 +19,18 @@
             <div class="alert alert-danger" th:if="${errorMessage}" th:text="${errorMessage}"></div>
 
             <div class="row mb-3 mt-3">
-                <div class="col-10 text-start card p-3">
-                    <span class="fs-1 border-0" th:text="${feedbackDto.getTitle()}"></span>
+                <div class="text-start card p-3">
+                    <div class="row">
+                        <span class="col-lg-10 fs-1 border-0" th:text="${feedbackDto.getTitle()}"></span>
+                        <div class="col mt-3 text-end" th:if="${canEdit == true}">
+                            <button class="btn btn-info" id="feedbackEditBtn">Edit Feedback</button>
+                        </div>
+                    </div>
+
+                    <p><strong>Feedback By:</strong> <strong
+                            th:text="${feedbackDto.getFeedbackBy().getEmail()}"></strong></p>
                 </div>
-                <div class="col-2 text-end" th:if="${canEdit == true}">
-                    <button class="btn btn-info" id="feedbackEditBtn">Edit Feedback</button>
-                </div>
+
             </div>
 
             <div class="row card p-4 mt-3">
@@ -71,9 +77,25 @@
         <div class="col-7 d-none" id="showEditFeedback">
             <div th:replace="fragments/feedback/feedbackEditModal :: showFeedbackUpdate"></div>
         </div>
-        <div class="col-lg"></div>
+        <div class="col-lg card p-4 mt-3">
+            <strong>Feedback History</strong>
+            <div class="mt-3" id="feedbackHistoryContainer" th:if="${feedbackHistories != null}">
+                <div class="feedback-history-item mt-3" th:each="feedbackHistory : ${feedbackHistories}">
+                    <img alt="edit" class="action_icon" src="/images/feedbackHistory.png">
+                    <span th:text="${#temporals.format(feedbackHistory.createdAt, 'h:mm:ss a dd/MM/YYYY')}"></span> <br>
+                    <strong th:text="${feedbackHistory.getChangedBy().getEmail()}"></strong> <br>
+                    <span th:text="${feedbackHistory.getChangeDescription()}"></span>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    let feedbackId = /*[[${feedbackDto.getId()}]]*/[];
+    /*]]>*/
+</script>
 <script th:src="@{/js/feedbackDetails.js}" type="text/javascript"></script>
 </body>
+
 </html>
