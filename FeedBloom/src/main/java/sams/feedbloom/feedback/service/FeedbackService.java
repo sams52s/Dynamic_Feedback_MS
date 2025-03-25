@@ -13,7 +13,6 @@ import sams.feedbloom.project.repository.ProjectRepository;
 
 import java.time.LocalDateTime;
 import java.util.Comparator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,46 +23,44 @@ public class FeedbackService {
 	private final FeedbackRepository feedbackRepository;
 	private final ProjectRepository projectRepository;
 	
-	
-	public FeedbackDto getById(Long id) {
-		Feedback feedback = feedbackRepository.findByIsDeletedFalseAndId(id);
-		return mapToDto(feedback);
-	}
-	
 	public List<FeedbackDto> getAll() {
-		return getSortedFeedbackDto(feedbackRepository.findByIsDeletedFalse());
+		return feedbackRepository.findByIsDeletedFalse().stream()
+		                         .sorted(Comparator.comparing(Feedback::getCreatedAt).reversed())
+		                         .map(FeedbackMapper::mapToResponse)
+		                         .collect(Collectors.toList());
 	}
 	
-	public LinkedList<FeedbackDto> getFeedbackByUserId(String createdBy) {
-		return getSortedFeedbackDto(feedbackRepository.findByIsDeletedAndCreatedByOrderByCreatedAtAsc(Boolean.FALSE, createdBy));
+	public List<FeedbackDto> getFeedbackByUserId(String createdBy) {
+		return feedbackRepository.findByIsDeletedAndCreatedByOrderByCreatedAtAsc(Boolean.FALSE, createdBy).stream()
+		                         .map(FeedbackMapper::mapToResponse)
+		                         .collect(Collectors.toList());
 	}
 	
-	public void create(FeedbackDto feedbackDto) {
-		feedbackDto.setCreatedAt(LocalDateTime.now());
-		feedbackDto.setStatus(FeedbackStatus.PENDING);
-		feedbackDto.setIsDeleted(Boolean.FALSE);
-		
+	public FeedbackDto getFeedbackDtoById(Long id) {
+		return FeedbackMapper.mapToResponse(findFeedbackById(id));
+	}
+	
+	public Feedback create(FeedbackDto feedbackDto) {
+		setDefaultValues(feedbackDto);
 		validateFeedbackDto(feedbackDto);
+		feedbackDto.setProject(findProjectById(feedbackDto.getProjectId()));
 		
-		Project project = findProjectById(feedbackDto.getProjectId());
-		feedbackDto.setProject(project);
-		Feedback feedback = new Feedback();
-		
-		feedbackRepository.save(FeedbackMapper.mapToEntity(feedbackDto, feedback));
+		Feedback feedback = FeedbackMapper.mapToEntity(feedbackDto, new Feedback());
+		return feedbackRepository.save(feedback);
 	}
 	
 	public void update(FeedbackDto feedbackDto) {
-		feedbackDto.setUpdatedAt(LocalDateTime.now());
-		feedbackDto.setIsDeleted(Boolean.FALSE);
-		Project project = findProjectById(feedbackDto.getProjectId());
-		feedbackDto.setProject(project);
-		
 		validateFeedbackDto(feedbackDto);
-		Feedback feedback = feedbackRepository.findByIsDeletedFalseAndId(feedbackDto.getId());
-		feedbackDto.setFeedbackBy(feedback.getFeedbackBy());
-		feedbackDto.setCreatedBy(feedback.getCreatedBy());
-		feedbackDto.setCreatedAt(feedback.getCreatedAt());
-		feedbackRepository.save(FeedbackMapper.mapToEntity(feedbackDto, feedback));
+		
+		Feedback existingFeedback = findFeedbackById(feedbackDto.getId());
+		feedbackDto.setUpdatedAt(LocalDateTime.now());
+		feedbackDto.setProject(findProjectById(feedbackDto.getProjectId()));
+		
+		feedbackDto.setFeedbackBy(existingFeedback.getFeedbackBy());
+		feedbackDto.setCreatedBy(existingFeedback.getCreatedBy());
+		feedbackDto.setCreatedAt(existingFeedback.getCreatedAt());
+		
+		feedbackRepository.save(FeedbackMapper.mapToEntity(feedbackDto, existingFeedback));
 	}
 	
 	public void delete(Long id, String email) {
@@ -75,24 +72,16 @@ public class FeedbackService {
 		feedbackRepository.save(feedback);
 	}
 	
-	private LinkedList<FeedbackDto> getSortedFeedbackDto(List<Feedback> feedbackList) {
-		return feedbackList.stream()
-		                   .sorted(Comparator.comparing(Feedback::getCreatedAt).reversed())
-		                   .map(this::mapToDto)
-		                   .collect(Collectors.toCollection(LinkedList::new));
+	private void setDefaultValues(final FeedbackDto feedbackDto) {
+		feedbackDto.setCreatedAt(LocalDateTime.now());
+		feedbackDto.setStatus(FeedbackStatus.PENDING);
+		feedbackDto.setIsDeleted(Boolean.FALSE);
 	}
 	
-	private FeedbackDto mapToDto(Feedback feedback) {
-		FeedbackDto dto = FeedbackMapper.mapToResponse(feedback);
-		dto.setProjectName(feedback.getProject().getName());
-		return dto;
-	}
-	
-	private Feedback findFeedbackById(Long id) {
+	public Feedback findFeedbackById(Long id) {
 		return feedbackRepository.findById(id)
 		                         .orElseThrow(() -> new EntityNotFoundException("Feedback not found with ID: " + id));
 	}
-	
 	
 	private Project findProjectById(Long projectId) {
 		return projectRepository.findById(projectId)
