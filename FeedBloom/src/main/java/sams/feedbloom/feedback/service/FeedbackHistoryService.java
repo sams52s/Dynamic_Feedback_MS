@@ -8,7 +8,6 @@ import sams.feedbloom.feedback.repository.FeedbackHistoryRepository;
 
 import java.util.Comparator;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -29,12 +28,6 @@ public class FeedbackHistoryService {
 		                                .sorted(Comparator.comparing(FeedbackHistory::getCreatedAt).reversed())
 		                                .map(this::mapToResponse)
 		                                .collect(Collectors.toCollection(LinkedList::new));
-	}
-	
-	public List<FeedbackHistoryResponse> getAll() {
-		return feedbackHistoryRepository.findAll().stream()
-		                                .map(this::mapToResponse)
-		                                .collect(Collectors.toList());
 	}
 	
 	public void create(FeedbackHistoryResponse feedbackHistoryResponse) {

@@ -18,4 +18,5 @@ public class FeedbackHistoryResponse extends CommonDTO {
 	private Feedback feedback;
 	private User changedBy;
 	private String changeDescription;
+	
 }
