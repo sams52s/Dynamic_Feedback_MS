@@ -23,6 +23,7 @@ import sams.feedbloom.user.entity.User;
 import sams.feedbloom.user.entity.UserRole;
 import sams.feedbloom.user.service.UserService;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Controller
@@ -47,6 +48,7 @@ public class FeedbackController {
 		} else {
 			feedbackList = feedbackService.getAll();
 		}
+		LocalDateTime now = LocalDateTime.now();
 		
 		model.addAttribute("feedbackDto", new FeedbackDto());
 		model.addAttribute("feedbackList", feedbackList);

@@ -10,18 +10,18 @@ import sams.feedbloom.feedback.mapper.FeedbackMapper;
 import sams.feedbloom.feedback.repository.FeedbackRepository;
 import sams.feedbloom.project.entity.Project;
 import sams.feedbloom.project.repository.ProjectRepository;
-import sams.feedbloom.user.repository.UserRepository;
 
 import java.time.LocalDateTime;
 import java.util.Comparator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class FeedbackService {
 	
 	private final FeedbackRepository feedbackRepository;
-	private final UserRepository userRepository;
 	private final ProjectRepository projectRepository;
 	
 	
@@ -34,7 +34,7 @@ public class FeedbackService {
 		return getSortedFeedbackDto(feedbackRepository.findByIsDeletedFalse());
 	}
 	
-	public List<FeedbackDto> getFeedbackByUserId(String createdBy) {
+	public LinkedList<FeedbackDto> getFeedbackByUserId(String createdBy) {
 		return getSortedFeedbackDto(feedbackRepository.findByIsDeletedAndCreatedByOrderByCreatedAtAsc(Boolean.FALSE, createdBy));
 	}
 	
@@ -75,11 +75,11 @@ public class FeedbackService {
 		feedbackRepository.save(feedback);
 	}
 	
-	private List<FeedbackDto> getSortedFeedbackDto(List<Feedback> feedbackList) {
+	private LinkedList<FeedbackDto> getSortedFeedbackDto(List<Feedback> feedbackList) {
 		return feedbackList.stream()
 		                   .sorted(Comparator.comparing(Feedback::getCreatedAt).reversed())
 		                   .map(this::mapToDto)
-		                   .toList();
+		                   .collect(Collectors.toCollection(LinkedList::new));
 	}
 	
 	private FeedbackDto mapToDto(Feedback feedback) {
