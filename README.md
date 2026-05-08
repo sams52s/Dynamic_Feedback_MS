@@ -1,243 +1,247 @@
-# Feedbloom
-### Feedback Management System
+# FeedBloom
+
+Enterprise-style feedback management platform built with Java and Spring Boot.
+
+Designed for structured feedback workflows, approval lifecycle management, analytics, and scalable backend architecture.
+
+---
 
 ## Overview
-This project is a Feedback Management System designed to streamline the process of submitting, reviewing, and resolving feedback within an organization. The system is built using Spring Boot and provides a robust workflow for users, approvers, and administrators to manage feedback efficiently.
 
-## Features
+FeedBloom is a backend-focused feedback management system designed to centralize feedback collection, approval workflows, tracking, and reporting across teams and organizations.
 
-### 1. User Registration & Authentication
+The project focuses on:
 
-#### 1.1 New User Registration
-- **Sign-Up Process:**
-  - Users provide a valid email address and a strong password.
-  - The system validates the email format and password strength.
-- **Email Verification (Optional):**
-  - A verification email is sent to the user.
-  - The user activates their account by clicking the verification link.
-- **Role Assignment:**
-  - The Admin assigns roles: User, Approver(Manager and Leads), and Admin.
-  - The user is notified of their role via email.
+- Modular backend architecture
+- Role-based workflow management
+- Feedback lifecycle tracking
+- Secure authentication and authorization
+- Enterprise-style scalability and maintainability
+- Real-time updates and notification workflows
 
-#### 1.2 User Login
-- **Access & Authentication:**
-  - Users enter their email and password on the login page.
-  - The system validates credentials and generates a JWT (JSON Web Token).
-  - The token is securely stored (e.g., in local storage or cookies).
-- **Role-Based Redirects:**
-  - Users are redirected to their respective dashboards:
-    - **Users:** Feedback submission & tracking.
-    - **Approvers:** Feedback review & approval.
-    - **Admins:** User management, analytics, & system oversight.
+---
 
-### 2. Feedback Submission (User)
+## Core Features
 
-#### 2.1 Submitting Feedback
-- **Navigation:**
-  - Users access the Submit Feedback section.
-- **Feedback Form:**
-  - Users provide the following details:
-    - **Title:** Brief description.
-    - **Description:** Detailed explanation.
-    - **Category:** Bug, Feature Request, or General.
-    - **Priority:** Low, Medium, or High.
-    - **Attachments:** Optional file uploads.
-  - The system validates input and saves feedback.
-  - Feedback status is set to "Submitted".
-  - A confirmation message is displayed.
-- **Notifications:**
-  - An email and in-app notification are sent to the assigned Approver.
+### Authentication & Access Control
+- JWT-based authentication
+- Role-based authorization (User, Approver, Admin)
+- Secure session and token handling
+- Permission-based workflow access
 
-### 3. Feedback Tracking & History (User, Approver, Admin)
+### Feedback Workflow System
+- Feedback submission and tracking
+- Approval and review lifecycle
+- Comment and status history tracking
+- Priority and category management
+- Resolution workflow management
 
-#### 3.1 Viewing Feedback
-- **User View:**
-  - Users navigate to "My Feedback".
-  - Feedback can be filtered by:
-    - **Category:** Bug, Feature Request, General.
-    - **Priority:** Low, Medium, High.
-    - **Status:** Submitted, Under Review, Resolved, etc.
-    - **Keywords:** Search for specific terms.
-  - Sorting options: Submission date, priority, or status.
-- **Approver/Admin View:**
-  - Access all feedback via "All Feedback".
-  - Advanced filters: Date range, assigned approver.
+### Search & Filtering
+- Smart filtering by:
+  - Category
+  - Priority
+  - Status
+  - Date range
+  - Keywords
+- Paginated large dataset handling
 
-#### 3.2 Viewing Feedback Details
-- **Timeline View:**
-  - Users click feedback items to see:
-    - **Status Changes:** Submitted, Under Review, Resolved.
-    - **Comments:** Notes from approvers/team members.
-    - **Priority Changes:** Updates to the priority level.
-    - **Modified By:** User who made the change.
-    - **Timestamp:** Date and time of the change.
-- **Attachments:**
-  - Users can view or download attachments uploaded by the user.
+### Notifications
+- In-app notifications
+- Email notification workflows
+- Feedback event triggers
+- Workflow update alerts
 
-### 4. Feedback Approval Workflow (Approver, Admin)
+### Analytics & Reporting
+- Feedback distribution analysis
+- Trending request insights
+- Resolution time tracking
+- Dashboard-oriented reporting structure
 
-#### 4.1 Reviewing Feedback
-- **Notification:**
-  - Approvers/Admins receive email and in-app notifications for new feedback.
-- **Review Actions:**
-  - **Request More Info:**
-    - Adds a comment requesting clarification.
-    - Status remains "Pending Approval".
-    - The user is notified.
-  - **Approve for Resolution:**
-    - Assigns feedback to a team member.
-    - Status changes to "Under Review".
-    - Priority may be updated.
-    - The user is notified.
-  - **Reject:**
-    - Marks feedback as "Rejected" with a reason.
-    - The user is notified.
+---
 
-### 5. Feedback Resolution (Admin, Assigned Team Member)
+## Architecture Focus
 
-#### 5.1 Resolving Feedback
-- **Workflow:**
-  - The assigned team member updates feedback progress.
-  - Adds comments to provide updates.
-- **Mark as Resolved:**
-  - Once resolved, the team member changes the status to "Resolved".
-  - The system notifies the user.
+This project was designed with emphasis on:
 
-### 6. Smart Filtering & Search (All Users)
+- Layered backend architecture
+- Modular service organization
+- Scalable workflow handling
+- Maintainable code structure
+- Enterprise-style backend practices
+- Audit/history tracking
+- Production-oriented design patterns
 
-#### 6.1 Search & Filter Options
-- **Searchable Fields:**
-  - **Title:** Keywords in the title.
-  - **Description:** Keywords in the description.
-  - **Category:** Bug, Feature Request, General.
-  - **Priority:** Low, Medium, High.
-  - **Status:** Submitted, Under Review, Resolved, etc.
-  - **Date Range:** Filter by submission date.
-- **Sorting & Pagination:**
-  - Results are sortable by submission date, priority, or status.
-  - Pagination is implemented for large datasets.
+---
 
-### 7. Analytics Dashboard (Admin)
+## Tech Stack
 
-#### 7.1 Viewing Analytics
-- **Metrics:**
-  - The admin views:
-    - **Most Common Feedback Topics:** Recurring issues or popular feature requests.
-    - **Trending Requests:** Most requested features over time.
-    - **Average Resolution Time:** Time taken to resolve feedback.
-    - **Feedback Distribution:** Breakdown by category, priority, and status.
-- **Visualizations:**
-  - Charts and graphs (e.g., bar charts, pie charts, line graphs) are used for data visualization.
+| Category | Technologies |
+|---|---|
+| Backend | Java, Spring Boot, Hibernate |
+| Security | JWT Authentication, RBAC |
+| Database | PostgreSQL |
+| Frontend | Thymeleaf, JavaScript, jQuery |
+| Real-Time & Notifications | AJAX, WebSocket Concepts |
+| DevOps & Deployment | Docker |
+| Monitoring | Prometheus, Grafana |
 
-### 8. Notifications & Alerts (User, Approver, Admin)
+---
 
-#### 8.1 Triggered Notifications
-- **Events:**
-  - Notifications are triggered for:
-    - New feedback submission.
-    - Feedback status changes.
-    - Comments added to feedback.
-    - Approval requests.
-- **Delivery Methods:**
-  - **Email Notifications:** Sent via Spring Boot Mail.
-  - **In-App Notifications:** Displayed using WebSocket or AJAX polling.
+## Workflow Overview
 
-### 9. Security & Access Control
+1. User submits feedback
+2. Approver reviews workflow
+3. Feedback gets approved/rejected
+4. Assigned member resolves issue
+5. Timeline/history gets updated
+6. Notifications trigger automatically
+7. Analytics aggregate workflow data
 
-#### 9.1 Authentication
-- **JWT-Based Login:**
-  - Users log in using JWT-based authentication.
-  - Tokens are securely stored and validated.
+---
 
-#### 9.2 Authorization
-- **Role-Based Access:**
-  - **Users:** Submit and track feedback.
-  - **Approvers:** Review and approve/reject feedback.
-  - **Admins:** Manage users and feedback.
+## System Architecture
 
-#### 9.3 Rate Limiting
-- **Prevent Abuse:**
-  - API calls are rate-limited to prevent abuse.
+```mermaid
+flowchart LR
+    User[User / Approver / Admin] --> UI[Thymeleaf UI]
+    UI --> Controller[Spring Boot Controllers]
+    Controller --> Service[Service Layer]
+    Service --> Repository[Repository Layer]
+    Repository --> DB[(PostgreSQL)]
 
-#### 9.4 Data Encryption
-- **Secure Data:**
-  - Sensitive data is encrypted in transit and at rest.
+    Service --> Auth[JWT + RBAC]
+    Service --> Notify[Notification Service]
+    Service --> Analytics[Analytics Service]
+```
 
-### 10. Deployment & Maintenance
+---
 
-#### 10.1 Deployment Strategy
-- **Containerization:**
-  - The application is Dockerized for easy deployment.
+## Feedback Lifecycle
 
-#### 10.2 Maintenance & Monitoring
-- **Regular Updates:**
-  - The system is regularly updated with new features and bug fixes.
-- **Performance Monitoring:**
-  - Performance is monitored using tools like Prometheus and Grafana.
+```mermaid
+stateDiagram-v2
+    [*] --> Submitted
+    Submitted --> UnderReview
+    UnderReview --> MoreInfoRequired
+    MoreInfoRequired --> UnderReview
+    UnderReview --> Approved
+    UnderReview --> Rejected
+    Approved --> InProgress
+    InProgress --> Resolved
+    Resolved --> Closed
+    Rejected --> Closed
+```
 
-### 11. End-to-End Flow Summary
-1. User submits feedback.
-2. Approver reviews feedback.
-3. Feedback is approved/rejected.
-4. Resolved feedback is tracked.
-5. Analytics provide insights.
-6. Notifications keep users informed.
-7. Admins manage security & access control.
+---
 
-### 12. Mission
-- **Submit Feedback:** Users can write feedback, categorize it (Bug, Feature Request, General), and set priority levels.
-- **Feedback History:** Once feedback is submitted, it should show a timeline of changes (status updates, comments, and priority changes).
-- **Approval Workflow:** Feedback should go through an approval process (assigned approvers) before being marked as resolved.
-- **Smart Filtering:** Users can filter feedback based on category, priority, status, and even keywords.
-- **Analytics Dash:** Show the most common feedback topics and highlight trends (like "most requested feature").
-- **Built with Spring Boot**
+## Role-Based Workflow
 
-## 13. Flow Chart
+```mermaid
+flowchart TD
+    User[User] --> Submit[Submit Feedback]
+    User --> Track[Track Feedback Status]
+
+    Approver[Approver] --> Review[Review Feedback]
+    Approver --> Approve[Approve / Reject]
+    Approver --> RequestInfo[Request More Info]
+
+    Admin[Admin] --> ManageUsers[Manage Users & Roles]
+    Admin --> Analytics[View Analytics]
+    Admin --> Configure[Configure Workflow]
+
+    Approve --> Assign[Assign for Resolution]
+    Assign --> Resolve[Resolve Feedback]
+```
+
+---
+
+## Security & Reliability
+
+- JWT-based authentication
+- Role-based access control
+- Rate limiting support
+- Audit/history tracking
+- Secure workflow handling
+- Production-oriented backend structure
+
+---
+
+## System Diagrams
+
+### Flow Chart
 ![Flow Chart](https://github.com/sams52s/Dynamic_Feedback_MS/blob/dev/sams/FLOW%20CHART.png)
 
-## 14. UML Sequence Diagram
+---
+
+### UML Sequence Diagram
 ![UML Sequence Diagram](https://github.com/sams52s/Dynamic_Feedback_MS/blob/dev/sams/%20UML%20Sequence%20Diagram.png)
 
-## 15. UML Class Diagram
+---
+
+### UML Class Diagram
 ![UML Class Diagram](https://github.com/sams52s/Dynamic_Feedback_MS/blob/dev/sams/UML%20Class%20Diagram.png)
 
-## 16. Database Schema Design:
+---
 
-### Entities & Relationships
-
-1. **User (`users`)**  
-   - Stores user details and authentication credentials.  
-   - **Roles:** User, Approver, Admin.  
-   - **Relationships:**  
-     - A User can submit multiple Feedbacks.  
-     - An Admin assigns roles to users.  
-
-2. **Feedback (`feedbacks`)**  
-   - Captures user-submitted feedback with categories, priority, and status.  
-   - **Relationships:**  
-     - A User submits Feedback.  
-     - An Approver reviews Feedback.  
-     - A Team Member resolves Feedback.  
-
-3. **Feedback History (`feedback_history`)**  
-   - Tracks feedback status changes (audit log).  
-   - Stores timestamps and the User who made changes.  
-
-4. **Comments (`feedback_comments`)**  
-   - Stores discussions and additional info on feedback.  
-   - Related to `feedback_id` and `user_id`.  
-
-5. **Attachments (`feedback_attachments`)**  
-   - Stores uploaded files related to feedback.  
-
-6. **Notifications (`notifications`)**  
-   - Manages in-app and email notifications for users.  
-
-7. **Roles & Permissions (`roles`, `user_roles`)**  
-   - Implements role-based access control (RBAC).  
-
-8. **Analytics & Reports (`feedback_stats`)**  
-   - Stores aggregated feedback data for quick dashboard queries.
-   - 
-## 17. ER Diagram Representation:
+### ER Diagram
 ![ER Diagram](https://github.com/sams52s/Dynamic_Feedback_MS/blob/dev/sams/ER%20Diagram.png)
+
+---
+
+## Database Design
+
+### Core Database Relationship
+
+```mermaid
+erDiagram
+    USERS ||--o{ FEEDBACKS : submits
+    USERS ||--o{ FEEDBACK_HISTORY : updates
+    FEEDBACKS ||--o{ FEEDBACK_HISTORY : tracks
+    FEEDBACKS ||--o{ FEEDBACK_COMMENTS : has
+    FEEDBACKS ||--o{ FEEDBACK_ATTACHMENTS : contains
+    FEEDBACKS ||--o{ NOTIFICATIONS : triggers
+    USERS ||--o{ NOTIFICATIONS : receives
+    USERS }o--o{ ROLES : assigned
+```
+
+---
+
+### Core Entities
+
+| Entity | Purpose |
+|---|---|
+| users | Authentication and user management |
+| feedbacks | Feedback lifecycle management |
+| feedback_history | Audit and status tracking |
+| feedback_comments | Workflow discussions |
+| feedback_attachments | File management |
+| notifications | Notification workflows |
+| roles / user_roles | RBAC implementation |
+| feedback_stats | Aggregated analytics |
+
+---
+
+## Engineering Goals
+
+- Build maintainable enterprise backend systems
+- Explore scalable workflow architecture
+- Practice structured backend engineering
+- Improve observability and workflow reliability
+- Design production-oriented backend patterns
+
+---
+
+## Future Improvements
+
+- AI-assisted feedback categorization
+- LLM-powered analytics and summarization
+- Smart recommendation workflows
+- Real-time notification optimization
+- Distributed workflow scaling
+- API-first architecture improvements
+
+---
+
+## Repository Status
+
+Active and evolving project focused on enterprise backend engineering and workflow-driven system design.
